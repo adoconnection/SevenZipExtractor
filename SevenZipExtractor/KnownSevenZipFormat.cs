@@ -1,4 +1,4 @@
-namespace SevenZipWrapper
+namespace SevenZipExtractor
 {
     public enum KnownSevenZipFormat
     {

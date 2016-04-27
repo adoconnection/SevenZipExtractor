@@ -5,7 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace SevenZipWrapper
+namespace SevenZipExtractor
 {
     [StructLayout(LayoutKind.Explicit, Size = 16)]
     internal struct PropVariant

@@ -1,7 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
-namespace SevenZipWrapper
+namespace SevenZipExtractor
 {
     public class Entry
     {
@@ -22,7 +21,7 @@ namespace SevenZipWrapper
         }
         public void Extract(Stream stream)
         {
-            archive.Extract(new[] { this.index }, 1, 0, new ArchiveStreamCallback(this.index, stream));
+            this.archive.Extract(new[] { this.index }, 1, 0, new ArchiveStreamCallback(this.index, stream));
         }
     }
 }

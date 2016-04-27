@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace SevenZipWrapper
+namespace SevenZipExtractor
 {
     public class SevenZipException : Exception
     {
