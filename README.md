@@ -30,7 +30,7 @@ Install-Package SevenZipExtractor
 
 Example:
 
-```
+```cs
 using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
 {
     foreach (Entry entry in archiveFile.Entries)
