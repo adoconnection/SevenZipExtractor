@@ -1,0 +1,16 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>SevenZipExtractor</id>
+    <version>1.0.1</version>
+    <title>SevenZipExtractor</title>
+    <authors>Alexander Selishchev</authors>
+    <owners>Alexander Selishchev</owners>
+    <projectUrl>https://github.com/adoconnection/SevenZipExtractor</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>C# wrapper for 7z.dll (included)</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>7Zip Arj BZip2 BZip2 Cab Chm Compound Cpio Deb GZip Iso Lzh Lzma Nsis Rar Rpm Split Tar Wim Z Zip</tags>
+  </metadata>
+</package>
