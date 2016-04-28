@@ -95,13 +95,15 @@ namespace SevenZipExtractor
         {
             if (string.IsNullOrWhiteSpace(this.libraryFilePath))
             {
-                if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z.dll")))
+                string suffix = IntPtr.Size == 4 ? "x86" : "x64"; // magic check
+
+                if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z-" + suffix + ".dll")))
                 {
-                    this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z.dll");
+                    this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z-" + suffix + ".dll");
                 }
-                else if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "7z.dll")))
+                else if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "7z-" + suffix + ".dll")))
                 {
-                    this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "7z.dll");
+                    this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "7z-" + suffix + ".dll");
                 }
                 else if (File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "7-Zip", "7z.dll")))
                 {
@@ -136,14 +138,20 @@ namespace SevenZipExtractor
 
         protected void Dispose(bool disposing)
         {
-            this.archiveStream.Dispose();
+            if (this.archiveStream != null)
+            {
+                this.archiveStream.Dispose();
+            }
 
             if (this.archive != null)
             {
                 Marshal.ReleaseComObject(this.archive);
             }
 
-            this.sevenZipFormat.Dispose();
+            if (this.sevenZipFormat != null)
+            {
+                this.sevenZipFormat.Dispose();
+            }
         }
 
         public void Dispose()

@@ -52,12 +52,15 @@
     <Compile Include="SevenZipInterface.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="7z.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="SevenZipExtractor.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SevenZipExtractor.nuspec" />
+    <Content Include="7z-x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="7z-x86.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
