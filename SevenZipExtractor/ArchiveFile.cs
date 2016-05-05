@@ -7,7 +7,7 @@ namespace SevenZipExtractor
 {
     public class ArchiveFile : IDisposable
     {
-        private SevenZipFormat sevenZipFormat;
+        private SevenZipHandle sevenZipHandle;
         private readonly IInArchive archive;
         private readonly InStreamWrapper archiveStream;
         private IList<Entry> entries;
@@ -25,16 +25,23 @@ namespace SevenZipExtractor
                 throw new SevenZipException("Archive file not found");
             }
 
-            KnownSevenZipFormat format;
-            string fileExtension = Path.GetExtension(archiveFilePath).Trim('.');
+            string extension = Path.GetExtension(archiveFilePath);
 
-            if (!Enum.TryParse(fileExtension, true, out format))
+            if (string.IsNullOrWhiteSpace(extension))
+            {
+                throw new SevenZipException("Unable to guess format for file: " + archiveFilePath);
+            }
+
+            string fileExtension = extension.Trim('.').ToLowerInvariant();
+
+            if (!Formats.ExtensionFormatMapping.ContainsKey(fileExtension))
             {
                 throw new SevenZipException(fileExtension + " is not a known archive type");
             }
 
-            
-            this.archive = this.sevenZipFormat.CreateInArchive(SevenZipFormat.GetClassIdFromKnownFormat(format));
+            KnownSevenZipFormat format = Formats.ExtensionFormatMapping[fileExtension];
+
+            this.archive = this.sevenZipHandle.CreateInArchive(Formats.FormatGuidMapping[format]);
             this.archiveStream = new InStreamWrapper(File.OpenRead(archiveFilePath));
         }
 
@@ -49,7 +56,7 @@ namespace SevenZipExtractor
                 throw new SevenZipException("archiveStream is null");
             }
 
-            this.archive = this.sevenZipFormat.CreateInArchive(SevenZipFormat.GetClassIdFromKnownFormat(format));
+            this.archive = this.sevenZipHandle.CreateInArchive(Formats.FormatGuidMapping[format]);
             this.archiveStream = new InStreamWrapper(archiveStream);
         }
 
@@ -78,17 +85,26 @@ namespace SevenZipExtractor
 
                 for (; fileIndex < itemsCount; fileIndex++)
                 {
-                    PropVariant propVariant = new PropVariant();
-                    this.archive.GetProperty(fileIndex, ItemPropId.kpidPath, ref propVariant);
-                    
+                    string fileName = this.GetProperty<string>(fileIndex, ItemPropId.kpidPath);
+                    bool isFolder = this.GetProperty<bool>(fileIndex, ItemPropId.kpidIsFolder);
+
                     this.entries.Add(new Entry(this.archive, fileIndex)
                     {
-                        FileName = (string)propVariant.GetObject()
+                        FileName = fileName,
+                        IsFolder = isFolder
                     });
                 }
 
                 return this.entries;
             }
+        }
+
+
+        private T GetProperty<T>(uint fileIndex, ItemPropId name)
+        {
+            PropVariant propVariant = new PropVariant();
+            this.archive.GetProperty(fileIndex, name, ref propVariant);
+            return (T) propVariant.GetObject();
         }
 
         private void InitializeAndValidateLibrary()
@@ -123,11 +139,11 @@ namespace SevenZipExtractor
 
             try
             {
-                this.sevenZipFormat = new SevenZipFormat(this.libraryFilePath);
+                this.sevenZipHandle = new SevenZipHandle(this.libraryFilePath);
             }
             catch (Exception e)
             {
-                throw new SevenZipException("Unable to initialize SevenZipFormat", e);
+                throw new SevenZipException("Unable to initialize SevenZipHandle", e);
             }
         }
 
@@ -148,9 +164,9 @@ namespace SevenZipExtractor
                 Marshal.ReleaseComObject(this.archive);
             }
 
-            if (this.sevenZipFormat != null)
+            if (this.sevenZipHandle != null)
             {
-                this.sevenZipFormat.Dispose();
+                this.sevenZipHandle.Dispose();
             }
         }
 

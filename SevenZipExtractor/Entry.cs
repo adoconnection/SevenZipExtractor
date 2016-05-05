@@ -14,6 +14,7 @@ namespace SevenZipExtractor
         }
 
         public string FileName { get; internal set; }
+        public bool IsFolder { get; internal set; }
 
         public void Extract(string fileName)
         {

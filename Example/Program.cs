@@ -7,7 +7,7 @@ namespace ConsoleApplication86
     {
         static void Main(string[] args)
         {
-            using (ArchiveFile archiveFile = new ArchiveFile(@"archive.ARJ"))
+            using (ArchiveFile archiveFile = new ArchiveFile(@"archive.arj"))
             {
                 foreach (Entry entry in archiveFile.Entries)
                 {
