@@ -4,26 +4,38 @@ C# wrapper for 7z.dll (included)
 Based on code from: http://www.codeproject.com/Articles/27148/C-NET-Interface-for-Zip-Archive-DLLs
 
 Supported formats:
-* 7Zip,
-* Arj,
-* BZip2,
-* Cab,
-* Chm,
-* Compound,
-* Cpio,
-* Deb,
-* GZip,
-* Iso,
-* Lzh,
-* Lzma,
-* Nsis,
-* Rar,
-* Rpm,
-* Split,
-* Tar,
-* Wim,
-* Z,
+* 7Zip
+* Arj
+* BZip2
+* Cab
+* Chm
+* Compound
+* Cpio
+* Deb
+* Dll
+* Dmg
+* Exe
+* Flv
+* GZip
+* Hfs
+* Iso
+* Lzh
+* Lzma
+* Mub
+* Nsis
+* Rar
+* Rpm
+* Split
+* Swf
+* Tar
+* Udf
+* Vhd
+* Wim
+* Xar
+* XZ
+* Z
 * Zip
+
 
 NuGet:
 ```
