@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SevenZipExtractor</id>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <title>SevenZipExtractor</title>
     <authors>Alexander Selishchev</authors>
     <owners>Alexander Selishchev</owners>
@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>C# wrapper for 7z.dll (included)</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright 2015</copyright>
+    <copyright>Copyright 2016</copyright>
     <tags>7Zip Arj BZip2 BZip2 Cab Chm Compound Cpio Deb GZip Iso Lzh Lzma Nsis Rar Rpm Split Tar Wim Z Zip</tags>
   </metadata>
 </package>
