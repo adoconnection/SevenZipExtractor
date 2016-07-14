@@ -18,7 +18,10 @@ namespace SevenZipExtractor
 
         public void Extract(string fileName)
         {
-            this.Extract(File.Create(fileName));
+            using (FileStream fileStream = File.Create(fileName))
+            {
+                this.Extract(fileStream);
+            }
         }
         public void Extract(Stream stream)
         {
