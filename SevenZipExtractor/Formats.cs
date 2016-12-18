@@ -9,13 +9,18 @@ namespace SevenZipExtractor
             new Dictionary<string, KnownSevenZipFormat>
 
             {{"7z",     KnownSevenZipFormat.SevenZip},
+             {"cb7",    KnownSevenZipFormat.SevenZip},
              {"gz",     KnownSevenZipFormat.GZip},
              {"tar",    KnownSevenZipFormat.Tar},
+             {"cbt",    KnownSevenZipFormat.Tar},
              {"rar",    KnownSevenZipFormat.Rar},
+             {"cbr",    KnownSevenZipFormat.Rar},
              {"zip",    KnownSevenZipFormat.Zip},
+             {"cbz",    KnownSevenZipFormat.Zip},
              {"lzma",   KnownSevenZipFormat.Lzma},
              {"lzh",    KnownSevenZipFormat.Lzh},
              {"arj",    KnownSevenZipFormat.Arj},
+             {"cba",    KnownSevenZipFormat.Arj},
              {"bz2",    KnownSevenZipFormat.BZip2},
              {"cab",    KnownSevenZipFormat.Cab},
              {"chm",    KnownSevenZipFormat.Chm},
