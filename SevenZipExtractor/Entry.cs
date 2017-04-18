@@ -6,21 +6,16 @@ namespace SevenZipExtractor
     {
         private readonly IInArchive archive;
         private readonly uint index;
-        private readonly uint size;
-        private readonly uint packedSize;
 
-        internal Entry(IInArchive archive, uint index, uint size, uint packedSize)
+        internal Entry(IInArchive archive, uint index)
         {
             this.archive = archive;
             this.index = index;
-            this.size = size;
-            this.packedSize = packedSize;
         }
 
         public string FileName { get; internal set; }
         public bool IsFolder { get; internal set; }
-        public uint Size { get; internal set; }
-        public uint PackedSize { get; internal set; }
+        public ulong Size { get; internal set; }
 
         public void Extract(string fileName)
         {

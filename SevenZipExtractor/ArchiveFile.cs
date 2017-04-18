@@ -87,15 +87,13 @@ namespace SevenZipExtractor
                 {
                     string fileName = this.GetProperty<string>(fileIndex, ItemPropId.kpidPath);
                     bool isFolder = this.GetProperty<bool>(fileIndex, ItemPropId.kpidIsFolder);
-                    uint size = this.GetProperty<int>(fileIndex, ItemPropId.kpidSize);
-                    uint packedSize = this.GetProperty<int>(fileIndex, ItemPropId.kpidPackedSize);
+                    ulong size = this.GetProperty<ulong>(fileIndex, ItemPropId.kpidSize);
 
                     this.entries.Add(new Entry(this.archive, fileIndex)
                     {
                         FileName = fileName,
                         IsFolder = isFolder,
-                        Size = size,
-                        PackedSize = packedSize
+                        Size = size
                     });
                 }
 
