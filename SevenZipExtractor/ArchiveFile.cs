@@ -60,6 +60,42 @@ namespace SevenZipExtractor
             this.archiveStream = new InStreamWrapper(archiveStream);
         }
 
+        public void Extract(string outputFolder, bool overwrite) 
+        {
+            IList<Stream> streams = new List<Stream>();
+            for (int i = 0; i < Entries.Count; i++) {
+                Entry entry = entries[i];
+                string fileName = Path.Combine(outputFolder, entry.FileName);
+                if (!entry.IsFolder && (!File.Exists(fileName) || overwrite)) {
+                    Directory.CreateDirectory(Path.GetDirectoryName(fileName));
+                    streams.Add(File.Create(fileName));
+                } else {
+                    streams.Add(null);
+                }
+            }
+            this.archive.Extract(null, 0xFFFFFFFF, 0, new ArchiveStreamCallback(streams));
+            foreach(Stream stream in streams) {
+                if (stream != null) stream.Dispose();
+            }
+        }
+
+        public void Extract(Func<Entry,string> getOutputPath) {
+            IList<Stream> streams = new List<Stream>();
+            foreach (Entry entry in Entries) {
+                string outputPath = getOutputPath(entry);
+                if (!string.IsNullOrEmpty(outputPath)) {
+                    Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
+                    streams.Add(File.Create(outputPath));
+                } else {
+                    streams.Add(null);
+                }
+            }
+            this.archive.Extract(null, 0xFFFFFFFF, 0, new ArchiveStreamCallback(streams));
+            foreach (Stream stream in streams) {
+                if (stream != null) stream.Dispose();
+            }
+        }
+
         public IList<Entry> Entries
         {
             get
