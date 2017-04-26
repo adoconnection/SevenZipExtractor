@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 
 namespace SevenZipExtractor
 {
@@ -6,6 +7,7 @@ namespace SevenZipExtractor
     {
         private readonly uint FileNumber;
         private readonly Stream stream;
+        private readonly IList<Stream> streams;
         private OutStreamWrapper FileStream;
 
         public Stream Stream
@@ -22,6 +24,10 @@ namespace SevenZipExtractor
             this.stream = stream;
         }
 
+        public ArchiveStreamCallback(IList<Stream> streams) {
+            this.streams = streams;
+        }
+
         public void SetTotal(ulong total)
         {
         }
@@ -32,13 +38,19 @@ namespace SevenZipExtractor
 
         public int GetStream(uint index, out ISequentialOutStream outStream, AskMode askExtractMode)
         {
-            if ((index == this.FileNumber) && (askExtractMode == AskMode.kExtract))
-            {
+            if (streams != null) {
+                if (streams[(int)index] == null) {
+                    outStream = null;
+                    return 0;
+                }
+                this.FileStream = new OutStreamWrapper(streams[(int) index]);
+                outStream = this.FileStream;
+            }
+            else if ((index == this.FileNumber) && (askExtractMode == AskMode.kExtract)) {
                 this.FileStream = new OutStreamWrapper(this.stream);
                 outStream = this.FileStream;
             }
-            else
-            {
+            else {
                 outStream = null;
             }
 
