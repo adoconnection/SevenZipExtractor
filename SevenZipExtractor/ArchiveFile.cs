@@ -83,7 +83,7 @@ namespace SevenZipExtractor
             IList<Stream> streams = new List<Stream>();
             foreach (Entry entry in Entries) {
                 string outputPath = getOutputPath(entry);
-                if (!string.IsNullOrEmpty(outputPath)) {
+                if (!entry.IsFolder && !string.IsNullOrEmpty(outputPath)) {
                     Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
                     streams.Add(File.Create(outputPath));
                 } else {
