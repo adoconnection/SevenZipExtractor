@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using SevenZipExtractor;
 
 namespace ConsoleApplication86
@@ -7,7 +8,7 @@ namespace ConsoleApplication86
     {
         static void Main(string[] args)
         {
-            using (ArchiveFile archiveFile = new ArchiveFile(@"archive.arj"))
+            using (ArchiveFile archiveFile = new ArchiveFile("archive.arj"))
             {
                 foreach (Entry entry in archiveFile.Entries)
                 {

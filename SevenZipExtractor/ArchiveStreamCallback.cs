@@ -4,21 +4,12 @@ namespace SevenZipExtractor
 {
     internal class ArchiveStreamCallback : IArchiveExtractCallback
     {
-        private readonly uint FileNumber;
+        private readonly uint fileNumber;
         private readonly Stream stream;
-        private OutStreamWrapper FileStream;
-
-        public Stream Stream
-        {
-            get
-            {
-                return this.stream;
-            }
-        }
 
         public ArchiveStreamCallback(uint fileNumber, Stream stream)
         {
-            this.FileNumber = fileNumber;
+            this.fileNumber = fileNumber;
             this.stream = stream;
         }
 
@@ -32,15 +23,13 @@ namespace SevenZipExtractor
 
         public int GetStream(uint index, out ISequentialOutStream outStream, AskMode askExtractMode)
         {
-            if ((index == this.FileNumber) && (askExtractMode == AskMode.kExtract)) 
-            {
-                this.FileStream = new OutStreamWrapper(this.stream);
-                outStream = this.FileStream;
-            }
-            else 
+            if ((index != this.fileNumber) || (askExtractMode != AskMode.kExtract))
             {
                 outStream = null;
+                return 0;
             }
+
+            outStream = new OutStreamWrapper(this.stream);
 
             return 0;
         }

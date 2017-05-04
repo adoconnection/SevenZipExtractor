@@ -46,7 +46,7 @@
     <Compile Include="Entry.cs" />
     <Compile Include="Formats.cs" />
     <Compile Include="Kernel32Dll.cs" />
-    <Compile Include="KnownSevenZipFormat.cs" />
+    <Compile Include="SevenZipFormat.cs" />
     <Compile Include="ArchiveFile.cs" />
     <Compile Include="IArchiveExtractCallback.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

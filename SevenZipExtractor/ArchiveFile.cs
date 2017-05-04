@@ -39,13 +39,13 @@ namespace SevenZipExtractor
                 throw new SevenZipException(fileExtension + " is not a known archive type");
             }
 
-            KnownSevenZipFormat format = Formats.ExtensionFormatMapping[fileExtension];
+            SevenZipFormat format = Formats.ExtensionFormatMapping[fileExtension];
 
             this.archive = this.sevenZipHandle.CreateInArchive(Formats.FormatGuidMapping[format]);
             this.archiveStream = new InStreamWrapper(File.OpenRead(archiveFilePath));
         }
 
-        public ArchiveFile(Stream archiveStream, KnownSevenZipFormat format, string libraryFilePath = null)
+        public ArchiveFile(Stream archiveStream, SevenZipFormat format, string libraryFilePath = null)
         {
             this.libraryFilePath = libraryFilePath;
 
@@ -60,47 +60,69 @@ namespace SevenZipExtractor
             this.archiveStream = new InStreamWrapper(archiveStream);
         }
 
-        public void Extract(string outputFolder, bool overwrite) 
+        public void Extract(string outputFolder, bool overwrite = false) 
         {
-            Extract(delegate (Entry entry) 
+            this.Extract(entry => 
             {
                 string fileName = Path.Combine(outputFolder, entry.FileName);
-                if (!entry.IsFolder && (!File.Exists(fileName) || overwrite)) 
+
+                if (entry.IsFolder)
                 {
                     return fileName;
                 }
-                else 
+
+                if (!File.Exists(fileName) || overwrite) 
                 {
-                    return null;
+                    return fileName;
                 }
+
+                return null;
             });
         }
 
-        public void Extract(Func<Entry,string> getOutputPath) 
+        public void Extract(Func<Entry, string> getOutputPath) 
         {
-            IList<Stream> streams = new List<Stream>();
+            IList<Stream> fileStreams = new List<Stream>();
+
             try 
             {
                 foreach (Entry entry in Entries)
                 {
                     string outputPath = getOutputPath(entry);
-                    if (!entry.IsFolder && !string.IsNullOrEmpty(outputPath))
+
+                    if (outputPath == null) // getOutputPath = null means SKIP
                     {
-                        Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
-                        streams.Add(File.Create(outputPath));
+                        fileStreams.Add(null);
+                        continue;
                     }
-                    else
+
+                    if (entry.IsFolder)
                     {
-                        streams.Add(null);
+                        Directory.CreateDirectory(outputPath);
+                        fileStreams.Add(null);
+                        continue;
                     }
+
+                    string directoryName = Path.GetDirectoryName(outputPath);
+
+                    if (!string.IsNullOrWhiteSpace(directoryName))
+                    {
+                        Directory.CreateDirectory(directoryName);
+                    }
+
+                    fileStreams.Add(File.Create(outputPath));
                 }
-                this.archive.Extract(null, 0xFFFFFFFF, 0, new ArchiveStreamsCallback(streams));
+
+                this.archive.Extract(null, 0xFFFFFFFF, 0, new ArchiveStreamsCallback(fileStreams));
             }
             finally
             {
-                foreach (Stream stream in streams) 
+                foreach (Stream stream in fileStreams) 
                 {
-                    if (stream != null) stream.Dispose();
+                    if (stream != null)
+                    {
+                        stream.Dispose();
+                    }
                 }
             }
         }
@@ -126,19 +148,19 @@ namespace SevenZipExtractor
 
                 this.entries = new List<Entry>();
 
-                uint fileIndex = 0;
-
-                for (; fileIndex < itemsCount; fileIndex++)
+                for (uint fileIndex = 0; fileIndex < itemsCount; fileIndex++)
                 {
                     string fileName = this.GetProperty<string>(fileIndex, ItemPropId.kpidPath);
                     bool isFolder = this.GetProperty<bool>(fileIndex, ItemPropId.kpidIsFolder);
                     ulong size = this.GetProperty<ulong>(fileIndex, ItemPropId.kpidSize);
+                    ulong packedSize = this.GetProperty<ulong>(fileIndex, ItemPropId.kpidPackedSize);
 
                     this.entries.Add(new Entry(this.archive, fileIndex)
                     {
                         FileName = fileName,
                         IsFolder = isFolder,
-                        Size = size
+                        Size = size,
+                        PackedSize = packedSize
                     });
                 }
 

@@ -5,17 +5,15 @@ namespace SevenZipExtractor
 {
     internal class ArchiveFileCallback : IArchiveExtractCallback
     {
-        private readonly string FileName;
-        private readonly uint FileNumber;
-        private OutStreamWrapper FileStream;
+        private readonly string fileName;
+        private readonly uint fileNumber;
+        private OutStreamWrapper fileStream; // to be removed
 
         public ArchiveFileCallback(uint fileNumber, string fileName)
         {
-            this.FileNumber = fileNumber;
-            this.FileName = fileName;
+            this.fileNumber = fileNumber;
+            this.fileName = fileName;
         }
-
-        #region IArchiveExtractCallback Members
 
         public void SetTotal(ulong total)
         {
@@ -27,21 +25,22 @@ namespace SevenZipExtractor
 
         public int GetStream(uint index, out ISequentialOutStream outStream, AskMode askExtractMode)
         {
-            if ((index == this.FileNumber) && (askExtractMode == AskMode.kExtract))
-            {
-                string FileDir = Path.GetDirectoryName(this.FileName);
-                if (!string.IsNullOrEmpty(FileDir))
-                {
-                    Directory.CreateDirectory(FileDir);
-                }
-                this.FileStream = new OutStreamWrapper(File.Create(this.FileName));
-
-                outStream = this.FileStream;
-            }
-            else
+            if ((index != this.fileNumber) || (askExtractMode != AskMode.kExtract))
             {
                 outStream = null;
+                return 0;
             }
+
+            string fileDir = Path.GetDirectoryName(this.fileName);
+
+            if (!string.IsNullOrEmpty(fileDir))
+            {
+                Directory.CreateDirectory(fileDir);
+            }
+
+            this.fileStream = new OutStreamWrapper(File.Create(this.fileName));
+
+            outStream = this.fileStream;
 
             return 0;
         }
@@ -52,10 +51,7 @@ namespace SevenZipExtractor
 
         public void SetOperationResult(OperationResult resultEOperationResult)
         {
-            this.FileStream.Dispose();
-            Console.WriteLine(resultEOperationResult);
+            this.fileStream.Dispose();
         }
-
-        #endregion
     }
 }
