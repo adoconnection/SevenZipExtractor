@@ -32,12 +32,12 @@ namespace SevenZipExtractor
 
         public int GetStream(uint index, out ISequentialOutStream outStream, AskMode askExtractMode)
         {
-            if ((index == this.FileNumber) && (askExtractMode == AskMode.kExtract))
+            if ((index == this.FileNumber) && (askExtractMode == AskMode.kExtract)) 
             {
                 this.FileStream = new OutStreamWrapper(this.stream);
                 outStream = this.FileStream;
             }
-            else
+            else 
             {
                 outStream = null;
             }

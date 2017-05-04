@@ -60,6 +60,51 @@ namespace SevenZipExtractor
             this.archiveStream = new InStreamWrapper(archiveStream);
         }
 
+        public void Extract(string outputFolder, bool overwrite) 
+        {
+            Extract(delegate (Entry entry) 
+            {
+                string fileName = Path.Combine(outputFolder, entry.FileName);
+                if (!entry.IsFolder && (!File.Exists(fileName) || overwrite)) 
+                {
+                    return fileName;
+                }
+                else 
+                {
+                    return null;
+                }
+            });
+        }
+
+        public void Extract(Func<Entry,string> getOutputPath) 
+        {
+            IList<Stream> streams = new List<Stream>();
+            try 
+            {
+                foreach (Entry entry in Entries)
+                {
+                    string outputPath = getOutputPath(entry);
+                    if (!entry.IsFolder && !string.IsNullOrEmpty(outputPath))
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
+                        streams.Add(File.Create(outputPath));
+                    }
+                    else
+                    {
+                        streams.Add(null);
+                    }
+                }
+                this.archive.Extract(null, 0xFFFFFFFF, 0, new ArchiveStreamsCallback(streams));
+            }
+            finally
+            {
+                foreach (Stream stream in streams) 
+                {
+                    if (stream != null) stream.Dispose();
+                }
+            }
+        }
+
         public IList<Entry> Entries
         {
             get
@@ -87,11 +132,13 @@ namespace SevenZipExtractor
                 {
                     string fileName = this.GetProperty<string>(fileIndex, ItemPropId.kpidPath);
                     bool isFolder = this.GetProperty<bool>(fileIndex, ItemPropId.kpidIsFolder);
+                    ulong size = this.GetProperty<ulong>(fileIndex, ItemPropId.kpidSize);
 
                     this.entries.Add(new Entry(this.archive, fileIndex)
                     {
                         FileName = fileName,
-                        IsFolder = isFolder
+                        IsFolder = isFolder,
+                        Size = size
                     });
                 }
 
