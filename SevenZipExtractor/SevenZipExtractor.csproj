@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchiveFileCallback.cs" />
+    <Compile Include="ArchiveStreamsCallback.cs" />
     <Compile Include="ArchiveStreamCallback.cs" />
     <Compile Include="Entry.cs" />
     <Compile Include="Formats.cs" />
