@@ -42,7 +42,15 @@ NuGet:
 Install-Package SevenZipExtractor
 ```
 
-Example:
+Examples:
+
+```cs
+using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
+{
+    archiveFile.Extract("Output"); // extract all
+}
+
+```
 
 ```cs
 using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
