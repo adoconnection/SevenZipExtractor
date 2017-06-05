@@ -72,3 +72,8 @@ using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
 
 ## 7z.dll
 7z-x64.dll and 7z-x86.dll has to be in your binaries folder. In Solution Explorer set *Build action = Copy always* for both files
+
+
+## License
+- Source code in this repo is licensed under The MIT License
+- 7z binaries license http://www.7-zip.org/license.txt
