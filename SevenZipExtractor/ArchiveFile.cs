@@ -168,11 +168,16 @@ namespace SevenZipExtractor
             }
         }
 
-
         private T GetProperty<T>(uint fileIndex, ItemPropId name)
         {
             PropVariant propVariant = new PropVariant();
             this.archive.GetProperty(fileIndex, name, ref propVariant);
+
+            if (propVariant.VarType == VarEnum.VT_EMPTY)
+            {
+                return default(T);
+            }
+            
             return (T) propVariant.GetObject();
         }
 

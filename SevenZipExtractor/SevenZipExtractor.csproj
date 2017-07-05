@@ -56,7 +56,9 @@
     <Compile Include="SevenZipInterface.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SevenZipExtractor.nuspec" />
+    <None Include="SevenZipExtractor.nuspec">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="7z-x64.dll">
