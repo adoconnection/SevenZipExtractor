@@ -52,6 +52,7 @@ namespace SevenZipExtractor
             {SevenZipFormat.Lzma, new Guid("23170f69-40c1-278a-1000-0001100a0000")},
             {SevenZipFormat.Nsis, new Guid("23170f69-40c1-278a-1000-000110090000")},
             {SevenZipFormat.Rar, new Guid("23170f69-40c1-278a-1000-000110030000")},
+            {SevenZipFormat.Rar5, new Guid("23170f69-40c1-278a-1000-000110CC0000")},
             {SevenZipFormat.Rpm, new Guid("23170f69-40c1-278a-1000-000110eb0000")},
             {SevenZipFormat.Split, new Guid("23170f69-40c1-278a-1000-000110ea0000")},
             {SevenZipFormat.Tar, new Guid("23170f69-40c1-278a-1000-000110ee0000")},
@@ -70,5 +71,7 @@ namespace SevenZipExtractor
             {SevenZipFormat.Swf, new Guid("23170f69-40c1-278a-1000-000110D70000")},
             {SevenZipFormat.Vhd, new Guid("23170f69-40c1-278a-1000-000110DC0000")}
         };
+
+        internal static byte[] RarFiveSignature = new byte[] { 0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x01, 0x00 };
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace SevenZipExtractor
@@ -39,7 +40,31 @@ namespace SevenZipExtractor
                 throw new SevenZipException(fileExtension + " is not a known archive type");
             }
 
-            SevenZipFormat format = Formats.ExtensionFormatMapping[fileExtension];
+            // 7z has different GUID for Pre-RAR5 and RAR5, but they have both same extension (.rar)
+            // So check rar file's signature. (https://www.rarlab.com/technote.htm)
+            // If it is 0x52 0x61 0x72 0x21 0x1A 0x07 0x01 0x00, then rar file is RAR5.
+            SevenZipFormat format;
+            if (fileExtension.Equals("rar", StringComparison.Ordinal))
+            {
+                byte[] archiveFileSignature = new byte[Formats.RarFiveSignature.Length];
+                using (FileStream fs = new FileStream(archiveFilePath, FileMode.Open))
+                {
+                    fs.Read(archiveFileSignature, 0, archiveFileSignature.Length);
+                }
+
+                if (Formats.RarFiveSignature.SequenceEqual(archiveFileSignature))
+                {
+                    format = SevenZipFormat.Rar5;
+                }
+                else
+                {
+                    format = SevenZipFormat.Rar;
+                }
+            }
+            else
+            {
+                format = Formats.ExtensionFormatMapping[fileExtension];
+            }
 
             this.archive = this.sevenZipHandle.CreateInArchive(Formats.FormatGuidMapping[format]);
             this.archiveStream = new InStreamWrapper(File.OpenRead(archiveFilePath));
