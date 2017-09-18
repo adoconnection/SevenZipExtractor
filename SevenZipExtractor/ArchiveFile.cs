@@ -47,7 +47,7 @@ namespace SevenZipExtractor
             if (fileExtension.Equals("rar", StringComparison.Ordinal))
             {
                 byte[] archiveFileSignature = new byte[Formats.RarFiveSignature.Length];
-                using (FileStream fs = new FileStream(archiveFilePath, FileMode.Open))
+                using (FileStream fs = new FileStream(archiveFilePath, FileMode.Open, FileAccess.Read))
                 {
                     fs.Read(archiveFileSignature, 0, archiveFileSignature.Length);
                 }
