@@ -40,36 +40,12 @@ namespace SevenZipExtractor
                 throw new SevenZipException(fileExtension + " is not a known archive type");
             }
 
-            // 7z has different GUID for Pre-RAR5 and RAR5, but they have both same extension (.rar)
-            // So check rar file's signature. (https://www.rarlab.com/technote.htm)
-            // If it is 0x52 0x61 0x72 0x21 0x1A 0x07 0x01 0x00, then rar file is RAR5.
-            SevenZipFormat format;
-            if (fileExtension.Equals("rar", StringComparison.Ordinal))
-            {
-                byte[] archiveFileSignature = new byte[Formats.RarFiveSignature.Length];
-                using (FileStream fs = new FileStream(archiveFilePath, FileMode.Open, FileAccess.Read))
-                {
-                    fs.Read(archiveFileSignature, 0, archiveFileSignature.Length);
-                }
-
-                if (Formats.RarFiveSignature.SequenceEqual(archiveFileSignature))
-                {
-                    format = SevenZipFormat.Rar5;
-                }
-                else
-                {
-                    format = SevenZipFormat.Rar;
-                }
-            }
-            else
-            {
-                format = Formats.ExtensionFormatMapping[fileExtension];
-            }
+            SevenZipFormat format = this.GuessFormatFromExtension(archiveFilePath, fileExtension);
 
             this.archive = this.sevenZipHandle.CreateInArchive(Formats.FormatGuidMapping[format]);
             this.archiveStream = new InStreamWrapper(File.OpenRead(archiveFilePath));
         }
-
+        
         public ArchiveFile(Stream archiveStream, SevenZipFormat format, string libraryFilePath = null)
         {
             this.libraryFilePath = libraryFilePath;
@@ -244,6 +220,33 @@ namespace SevenZipExtractor
             {
                 throw new SevenZipException("Unable to initialize SevenZipHandle", e);
             }
+        }
+
+
+        private SevenZipFormat GuessFormatFromExtension(string archiveFilePath, string fileExtension)
+        {
+            if (!fileExtension.Equals("rar", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return Formats.ExtensionFormatMapping[fileExtension];
+            }
+
+            // 7z has different GUID for Pre-RAR5 and RAR5, but they have both same extension (.rar)
+            // So check rar file's signature. (https://www.rarlab.com/technote.htm)
+            // If it is 0x52 0x61 0x72 0x21 0x1A 0x07 0x01 0x00, then rar file is RAR5.
+
+            byte[] archiveFileSignature = new byte[Formats.RarFiveSignature.Length];
+
+            using (FileStream fileStream = new FileStream(archiveFilePath, FileMode.Open, FileAccess.Read))
+            {
+                fileStream.Read(archiveFileSignature, 0, archiveFileSignature.Length);
+            }
+
+            if (Formats.RarFiveSignature.SequenceEqual(archiveFileSignature))
+            {
+                return SevenZipFormat.Rar5;
+            }
+
+            return SevenZipFormat.Rar;
         }
 
         ~ArchiveFile()
