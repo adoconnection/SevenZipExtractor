@@ -11,6 +11,6 @@
     <description>C# wrapper for 7z.dll (included)</description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2017</copyright>
-    <tags>7Zip Arj BZip2 Cab Chm Compound Cpio Deb Dll Dmg Exe Flv GZip Hfs Iso Lzh Lzma Mub Nsis Rar Rpm Split Swf Tar Udf Vhd Wim Xar XZ Z Zip</tags>
+    <tags>7Zip Arj BZip2 Cab Chm Compound Cpio Deb Dll Dmg Exe Flv GZip Hfs Iso Lzh Lzma Mub Nsis Rar Rar5 Rpm Split Swf Tar Udf Vhd Wim Xar XZ Z Zip</tags>
   </metadata>
 </package>

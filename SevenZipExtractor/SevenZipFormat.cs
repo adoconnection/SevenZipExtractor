@@ -73,8 +73,13 @@ namespace SevenZipExtractor
         /// <summary>
         /// RarLab Rar archive format.
         /// </summary>
-        /// <remarks><a href="http://en.wikipedia.org/wiki/Rar">Wikipedia information</a></remarks>
+        /// <remarks><a href="https://en.wikipedia.org/wiki/RAR_(file_format)">Wikipedia information</a></remarks>
         Rar,
+        /// <summary>
+        /// RarLab Rar archive format, version 5.
+        /// </summary>
+        /// <remarks><a href="https://en.wikipedia.org/wiki/RAR_(file_format)">Wikipedia information</a></remarks>
+        Rar5,
         /// <summary>
         /// Open Rpm software package format.
         /// </summary>
