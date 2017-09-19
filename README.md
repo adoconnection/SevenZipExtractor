@@ -24,6 +24,7 @@ Supported formats:
 * Mub
 * Nsis
 * Rar
+* Rar5
 * Rpm
 * Split
 * Swf
