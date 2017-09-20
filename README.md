@@ -1,5 +1,5 @@
 # SevenZipExtractor
-C# wrapper for 7z.dll (included) 
+C# wrapper for 7z.dll (x86 and x64 included) 
 
 Based on code from: http://www.codeproject.com/Articles/27148/C-NET-Interface-for-Zip-Archive-DLLs
 
