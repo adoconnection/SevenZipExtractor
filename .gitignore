@@ -21,7 +21,7 @@ bld/
 [Bb]in/
 [Oo]bj/
 
-# Do not include 7z.dll
+# Do not ignore 7z.dll
 !/SevenZipExtractor/7zDll/x86/
 !/SevenZipExtractor/7zDll/x64/
 
