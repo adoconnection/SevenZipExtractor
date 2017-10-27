@@ -69,7 +69,21 @@ namespace SevenZipExtractor
             {SevenZipFormat.PE, new Guid("23170f69-40c1-278a-1000-000110DD0000")},
             {SevenZipFormat.Elf, new Guid("23170f69-40c1-278a-1000-000110DE0000")},
             {SevenZipFormat.Swf, new Guid("23170f69-40c1-278a-1000-000110D70000")},
-            {SevenZipFormat.Vhd, new Guid("23170f69-40c1-278a-1000-000110DC0000")}
+            {SevenZipFormat.Vhd, new Guid("23170f69-40c1-278a-1000-000110DC0000")},
+            {SevenZipFormat.Flv, new Guid("23170f69-40c1-278a-1000-000110D60000")},
+            {SevenZipFormat.SquashFS, new Guid("23170f69-40c1-278a-1000-000110D20000")},
+            {SevenZipFormat.Lzma86, new Guid("23170f69-40c1-278a-1000-0001100B0000")},
+            {SevenZipFormat.Ppmd, new Guid("23170f69-40c1-278a-1000-0001100D0000")},
+            {SevenZipFormat.TE, new Guid("23170f69-40c1-278a-1000-000110CF0000")},
+            {SevenZipFormat.UEFIc, new Guid("23170f69-40c1-278a-1000-000110D00000")},
+            {SevenZipFormat.UEFIs, new Guid("23170f69-40c1-278a-1000-000110D10000")},
+            {SevenZipFormat.CramFS, new Guid("23170f69-40c1-278a-1000-000110D30000")},
+            {SevenZipFormat.APM, new Guid("23170f69-40c1-278a-1000-000110D40000")},
+            {SevenZipFormat.Swfc, new Guid("23170f69-40c1-278a-1000-000110D80000")},
+            {SevenZipFormat.Ntfs, new Guid("23170f69-40c1-278a-1000-000110D90000")},
+            {SevenZipFormat.Fat, new Guid("23170f69-40c1-278a-1000-000110DA0000")},
+            {SevenZipFormat.Mbr, new Guid("23170f69-40c1-278a-1000-000110DB0000")},
+            {SevenZipFormat.MachO, new Guid("23170f69-40c1-278a-1000-000110DF0000")}
         };
 
         internal static byte[] RarFiveSignature = new byte[] { 0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x01, 0x00 };
