@@ -51,12 +51,12 @@ Supported formats:
 * Zip
 
 
-NuGet:
+## NuGet:
 ```
 Install-Package SevenZipExtractor
 ```
 
-Examples:
+## Examples:
 
 ```cs
 using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
