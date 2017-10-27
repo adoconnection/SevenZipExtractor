@@ -19,7 +19,6 @@ Supported formats:
 * Exe
 * Fat
 * Flv
-* Flv
 * GZip
 * Hfs
 * Iso
