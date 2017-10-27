@@ -222,7 +222,6 @@ namespace SevenZipExtractor
             }
         }
 
-
         private SevenZipFormat GuessFormatFromExtension(string archiveFilePath, string fileExtension)
         {
             if (!fileExtension.Equals("rar", StringComparison.InvariantCultureIgnoreCase))
