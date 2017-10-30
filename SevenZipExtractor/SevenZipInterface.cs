@@ -1,13 +1,22 @@
 // Version 1.5
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Permissions;
 using System.Threading;
 
 namespace SevenZipExtractor
 {
-    [StructLayout(LayoutKind.Explicit, Size = 16)]
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct PropArray
+    {
+        uint length;
+        IntPtr pointerValues;
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
     internal struct PropVariant
     {
         [DllImport("ole32.dll")]
@@ -18,6 +27,7 @@ namespace SevenZipExtractor
         [FieldOffset(8)] public byte byteValue;
         [FieldOffset(8)] public long longValue;
         [FieldOffset(8)] public System.Runtime.InteropServices.ComTypes.FILETIME filetime;
+        [FieldOffset(8)] public PropArray propArray;
 
         public VarEnum VarType
         {
