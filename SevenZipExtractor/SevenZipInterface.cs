@@ -31,7 +31,10 @@ namespace SevenZipExtractor
 
         public VarEnum VarType
         {
-            get { return (VarEnum) this.vt; }
+            get
+            {
+                return (VarEnum) this.vt;
+            }
         }
 
         public void Clear()
@@ -40,6 +43,7 @@ namespace SevenZipExtractor
             {
                 case VarEnum.VT_EMPTY:
                     break;
+
                 case VarEnum.VT_NULL:
                 case VarEnum.VT_I2:
                 case VarEnum.VT_I4:
@@ -62,6 +66,7 @@ namespace SevenZipExtractor
                 case VarEnum.VT_FILETIME:
                     this.vt = 0;
                     break;
+
                 default:
                     PropVariantClear(ref this);
                     break;
@@ -74,10 +79,13 @@ namespace SevenZipExtractor
             {
                 case VarEnum.VT_EMPTY:
                     return null;
+
                 case VarEnum.VT_FILETIME:
                     return DateTime.FromFileTime(this.longValue);
+
                 default:
                     GCHandle PropHandle = GCHandle.Alloc(this, GCHandleType.Pinned);
+
                     try
                     {
                         return Marshal.GetObjectForNativeVariant(PropHandle.AddrOfPinnedObject());
