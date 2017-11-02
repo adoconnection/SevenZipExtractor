@@ -173,13 +173,12 @@ namespace SevenZipExtractor
         {
             PropVariant propVariant = new PropVariant();
             this.archive.GetProperty(fileIndex, name, ref propVariant);
+            T result = propVariant.VarType != VarEnum.VT_EMPTY
+                ? (T) propVariant.GetObject()
+                : default(T);
+            propVariant.Clear();
 
-            if (propVariant.VarType == VarEnum.VT_EMPTY)
-            {
-                return default(T);
-            }
-            
-            return (T) propVariant.GetObject();
+            return result;
         }
 
         private void InitializeAndValidateLibrary()
