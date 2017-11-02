@@ -85,7 +85,7 @@ using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
 ```
 
 ## 7z.dll
-7z-x64.dll and 7z-x86.dll has to be in your binaries folder. In Solution Explorer set *Build action = Copy always* for both files
+7z.dll (x86 and x64) will be added to your BIN folder autmatically.
 
 
 ## License
