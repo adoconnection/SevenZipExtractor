@@ -187,19 +187,19 @@ namespace SevenZipExtractor
         {
             if (string.IsNullOrWhiteSpace(this.libraryFilePath))
             {
-                string arch = IntPtr.Size == 4 ? "x86" : "x64"; // magic check
+                string currentArchitecture = IntPtr.Size == 4 ? "x86" : "x64"; // magic check
 
-                if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z-" + arch + ".dll")))
+                if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z-" + currentArchitecture + ".dll")))
                 {
-                    this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z-" + arch + ".dll");
+                    this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "7z-" + currentArchitecture + ".dll");
                 }
-                else if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "7z-" + arch + ".dll")))
+                else if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "7z-" + currentArchitecture + ".dll")))
                 {
-                    this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "7z-" + arch + ".dll");
+                    this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "7z-" + currentArchitecture + ".dll");
                 }
-                else if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, arch, "7z.dll")))
+                else if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, currentArchitecture, "7z.dll")))
                 {
-                    this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, arch, "7z.dll");
+                    this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, currentArchitecture, "7z.dll");
                 }
                 else if (File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "7-Zip", "7z.dll")))
                 {

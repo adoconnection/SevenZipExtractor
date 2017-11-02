@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SevenZipExtractor</id>
-    <version>1.0.9</version>
+    <version>1.0.10</version>
     <title>SevenZipExtractor</title>
     <authors>Eugene Sichkar, Alexander Selishchev, @matortheeternal, Hajin Jang, Artem Tarasov</authors>
     <owners>Alexander Selishchev</owners>
