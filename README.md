@@ -85,7 +85,7 @@ using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
 ```
 
 ## 7z.dll
-7z.dll (x86 and x64) will be added to your BIN folder autmatically.
+7z.dll (x86 and x64) will be added to your BIN folder automatically.
 
 
 ## License
