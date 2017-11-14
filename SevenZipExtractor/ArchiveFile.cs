@@ -29,7 +29,7 @@ namespace SevenZipExtractor
 
             string extension = Path.GetExtension(archiveFilePath);
 
-            if (string.IsNullOrWhiteSpace(extension) && Formats.ExtensionFormatMapping.ContainsKey(extension.Trim('.').ToLowerInvariant()))
+            if (!string.IsNullOrWhiteSpace(extension) && Formats.ExtensionFormatMapping.ContainsKey(extension.Trim('.').ToLowerInvariant()))
                 format = this.GuessFormatFromExtension(archiveFilePath, extension.Trim('.').ToLowerInvariant());
             else
                 format = this.GuessFormatFromSignature(archiveFilePath);
