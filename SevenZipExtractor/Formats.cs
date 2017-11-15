@@ -36,6 +36,7 @@ namespace SevenZipExtractor
             {"vhd", SevenZipFormat.Vhd}
         };
 
+
         internal static Dictionary<SevenZipFormat, Guid> FormatGuidMapping = new Dictionary<SevenZipFormat, Guid>
         {
             {SevenZipFormat.SevenZip, new Guid("23170f69-40c1-278a-1000-000110070000")},
