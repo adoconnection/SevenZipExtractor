@@ -58,6 +58,7 @@ Install-Package SevenZipExtractor
 
 ## Examples
 
+#### Extract all
 ```cs
 using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
 {
@@ -66,6 +67,7 @@ using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
 
 ```
 
+#### Extract to file or stream
 ```cs
 using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
 {
@@ -82,6 +84,25 @@ using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
     }
 }
 
+```
+
+#### Guess archive format from files without extensions
+```cs
+using (ArchiveFile archiveFile = new ArchiveFile(@"c:\random-archive"))
+{
+    archiveFile.Extract("Output"); 
+}
+```
+
+#### Guess archive format from streams
+```cs
+WebRequest request = WebRequest.Create ("http://www.contoso.com/file.aspx?id=12345");
+HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+using (ArchiveFile archiveFile = new ArchiveFile(response.GetResponseStream())
+{
+    archiveFile.Extract("Output"); 
+}
 ```
 
 ## 7z.dll
