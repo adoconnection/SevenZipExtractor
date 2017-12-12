@@ -36,6 +36,7 @@ namespace SevenZipExtractor
             {"vhd", SevenZipFormat.Vhd}
         };
 
+
         internal static Dictionary<SevenZipFormat, Guid> FormatGuidMapping = new Dictionary<SevenZipFormat, Guid>
         {
             {SevenZipFormat.SevenZip, new Guid("23170f69-40c1-278a-1000-000110070000")},
@@ -87,5 +88,23 @@ namespace SevenZipExtractor
         };
 
         internal static byte[] RarFiveSignature = new byte[] { 0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x01, 0x00 };
+        internal static byte[] VhdSignature = new byte[] { 0x63, 0x6F, 0x6E, 0x65, 0x63, 0x74, 0x69, 0x78 };
+        internal static byte[] RarSignature = new byte[] { 0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x00 };
+        internal static byte[] DebSignature = new byte[] { 0x21, 0x3C, 0x61, 0x72, 0x63, 0x68, 0x3E };
+        internal static byte[] DmgSignature = new byte[] { 0x78, 0x01, 0x73, 0x0D, 0x62, 0x62, 0x60 };
+        internal static byte[] SevenZipSignature = new byte[] { 0x37, 0x7A, 0xBC, 0xAF, 0x27, 0x1C };
+        internal static byte[] TarSignature = new byte[] { 0x75, 0x73, 0x74, 0x61, 0x72 };
+        internal static byte[] IsoSignature = new byte[] { 0x43, 0x44, 0x30, 0x30, 0x31 };
+        internal static byte[] CabSignature = new byte[] { 0x4D, 0x53, 0x43, 0x46 };
+        internal static byte[] RpmSignature = new byte[] { 0xed, 0xab, 0xee, 0xdb };
+        internal static byte[] XarSignature = new byte[] { 0x78, 0x61, 0x72, 0x21 };
+        internal static byte[] ChmSignature = new byte[] { 0x49, 0x54, 0x53, 0x46 };
+        internal static byte[] BZip2Signature = new byte[] { 0x42, 0x5A, 0x68 };
+        internal static byte[] FlvSignature = new byte[] { 0x46, 0x4C, 0x56 };
+        internal static byte[] SwfSignature = new byte[] { 0x46, 0x57, 0x53 };
+        internal static byte[] GZipSignature = new byte[] { 0x1f, 0x0b };
+        internal static byte[] ZipSignature = new byte[] { 0x50, 0x4b };
+        internal static byte[] ArjSignature = new byte[] { 0x60, 0xEA };
+        internal static byte[] LzhSignature = new byte[] { 0x2D, 0x6C, 0x68 };
     }
 }
