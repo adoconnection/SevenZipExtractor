@@ -5,6 +5,9 @@ namespace SevenZipExtractor
     /// </summary>
     public enum SevenZipFormat
     {
+        // Default invalid format value
+        Undefined = 0,
+
         /// <summary>
         /// Open 7-zip archive format.
         /// </summary>  

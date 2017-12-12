@@ -17,7 +17,6 @@ namespace SevenZipExtractor
 
         public ArchiveFile(string archiveFilePath, string libraryFilePath = null)
         {
-            SevenZipFormat format;
             this.libraryFilePath = libraryFilePath;
 
             this.InitializeAndValidateLibrary();
@@ -27,18 +26,27 @@ namespace SevenZipExtractor
                 throw new SevenZipException("Archive file not found");
             }
 
+            SevenZipFormat format;
             string extension = Path.GetExtension(archiveFilePath);
 
-            if (!string.IsNullOrWhiteSpace(extension) && Formats.ExtensionFormatMapping.ContainsKey(extension.Trim('.').ToLowerInvariant()))
-                format = this.GuessFormatFromExtension(archiveFilePath, extension.Trim('.').ToLowerInvariant());
+            if (this.GuessFormatFromExtension(extension, out format))
+            {
+                // great
+            }
+            else if (this.GuessFormatFromSignature(archiveFilePath, out format))
+            {
+                // success
+            }
             else
-                format = this.GuessFormatFromSignature(archiveFilePath);
+            {
+                throw new SevenZipException(Path.GetFileName(archiveFilePath) + " is not a known archive type");
+            }
 
             this.archive = this.sevenZipHandle.CreateInArchive(Formats.FormatGuidMapping[format]);
             this.archiveStream = new InStreamWrapper(File.OpenRead(archiveFilePath));
         }
         
-        public ArchiveFile(Stream archiveStream, SevenZipFormat format, string libraryFilePath = null)
+        public ArchiveFile(Stream archiveStream, SevenZipFormat? format = null, string libraryFilePath = null)
         {
             this.libraryFilePath = libraryFilePath;
 
@@ -49,7 +57,21 @@ namespace SevenZipExtractor
                 throw new SevenZipException("archiveStream is null");
             }
 
-            this.archive = this.sevenZipHandle.CreateInArchive(Formats.FormatGuidMapping[format]);
+            if (format == null)
+            {
+                SevenZipFormat guessedFormat;
+
+                if (this.GuessFormatFromSignature(archiveStream, out guessedFormat))
+                {
+                    format = guessedFormat;
+                }
+                else
+                {
+                    throw new SevenZipException("Unable to guess format autmatically");
+                }
+            }
+
+            this.archive = this.sevenZipHandle.CreateInArchive(Formats.FormatGuidMapping[format.Value]);
             this.archiveStream = new InStreamWrapper(archiveStream);
         }
 
@@ -219,116 +241,73 @@ namespace SevenZipExtractor
             }
         }
 
-        private SevenZipFormat GuessFormatFromExtension(string archiveFilePath, string fileExtension)
+        private bool GuessFormatFromExtension(string fileExtension, out SevenZipFormat format)
         {
-            if (!fileExtension.Equals("rar", StringComparison.InvariantCultureIgnoreCase))
+            if (string.IsNullOrWhiteSpace(fileExtension))
             {
-                return Formats.ExtensionFormatMapping[fileExtension];
+                format = SevenZipFormat.Undefined;
+                return false;
             }
 
-            // 7z has different GUID for Pre-RAR5 and RAR5, but they have both same extension (.rar)
-            // So check rar file's signature. (https://www.rarlab.com/technote.htm)
-            // If it is 0x52 0x61 0x72 0x21 0x1A 0x07 0x01 0x00, then rar file is RAR5.
+            fileExtension = fileExtension.TrimStart('.').Trim().ToLowerInvariant();
 
-            byte[] archiveFileSignature = new byte[Formats.RarFiveSignature.Length];
-
-            using (FileStream fileStream = new FileStream(archiveFilePath, FileMode.Open, FileAccess.Read))
+            if (fileExtension.Equals("rar"))
             {
-                fileStream.Read(archiveFileSignature, 0, archiveFileSignature.Length);
+                // 7z has different GUID for Pre-RAR5 and RAR5, but they have both same extension (.rar)
+                // If it is [0x52 0x61 0x72 0x21 0x1A 0x07 0x01 0x00] then file is RAR5 otherwise RAR.
+                // https://www.rarlab.com/technote.htm
+
+                // We are unable to guess right format just by looking at extension and have to check signature
+
+                format = SevenZipFormat.Undefined;
+                return false;
             }
 
-            if (Formats.RarFiveSignature.SequenceEqual(archiveFileSignature))
+            if (!Formats.ExtensionFormatMapping.ContainsKey(fileExtension))
             {
-                return SevenZipFormat.Rar5;
+                format = SevenZipFormat.Undefined;
+                return false;
             }
 
-            return SevenZipFormat.Rar;
+            format = Formats.ExtensionFormatMapping[fileExtension];
+            return true;
         }
 
-        /// <summary>
-        /// Get file format by signature (Magic number)
-        /// </summary>
-        /// <param name="archiveFilePath">Path and filename to extract</param>
-        /// <returns>File format</returns>
-        private SevenZipFormat GuessFormatFromSignature(string archiveFilePath)
+
+        private bool GuessFormatFromSignature(string filePath, out SevenZipFormat format)
         {
-            byte[] archiveFileSignature;
-            byte[] testSignature;
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                return GuessFormatFromSignature(fileStream, out format);
+            }
+        }
 
-            //Read file signature
-            archiveFileSignature = new byte[Formats.RarFiveSignature.Length];
-            using (FileStream fileStream = new FileStream(archiveFilePath, FileMode.Open, FileAccess.Read))
-                fileStream.Read(archiveFileSignature, 0, archiveFileSignature.Length);
+        private bool GuessFormatFromSignature(Stream stream, out SevenZipFormat format)
+        {
+            int longestSignature = Formats.FileSignatures.Values.OrderByDescending(v => v.Length).First().Length;
 
-            //RAR5
-            if (Formats.RarFiveSignature.SequenceEqual(archiveFileSignature))
-                return SevenZipFormat.Rar5;
-            if (Formats.VhdSignature.SequenceEqual(archiveFileSignature))
-                return SevenZipFormat.Vhd;
+            byte[] archiveFileSignature = new byte[longestSignature];
+            int bytesRead = stream.Read(archiveFileSignature, 0, longestSignature);
 
-            //RAR & DEB & DMG
-            testSignature = new byte[Formats.RarSignature.Length];
-            Array.Copy(archiveFileSignature, testSignature, Formats.RarSignature.Length);
-            if (Formats.RarSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.Rar;
-            if (Formats.DebSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.Deb;
-            if (Formats.DmgSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.Dmg;
+            stream.Position -= bytesRead; // go back o beginning
 
-            //SevenZip
-            testSignature = new byte[Formats.SevenZipSignature.Length];
-            Array.Copy(archiveFileSignature, testSignature, Formats.SevenZipSignature.Length);
-            if (Formats.SevenZipSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.SevenZip;
+            if (bytesRead != longestSignature)
+            {
+                format = SevenZipFormat.Undefined;
+                return false;
+            }
 
-            //TAR
-            testSignature = new byte[Formats.TarSignature.Length];
-            Array.Copy(archiveFileSignature, testSignature, Formats.TarSignature.Length);
-            if (Formats.TarSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.Tar;
-            if (Formats.IsoSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.Iso;
+            foreach (KeyValuePair<SevenZipFormat, byte[]> pair in Formats.FileSignatures)
+            {
+                if (archiveFileSignature.Take(pair.Value.Length).SequenceEqual(pair.Value))
+                {
+                    format = pair.Key;
+                    return true;
+                }
+            }
 
-            //CAB & RPM & XAR & CHM
-            testSignature = new byte[Formats.CabSignature.Length];
-            Array.Copy(archiveFileSignature, testSignature, Formats.CabSignature.Length);
-            if (Formats.CabSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.Cab;
-            if (Formats.RpmSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.Rpm;
-            if (Formats.XarSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.Xar;
-            if (Formats.ChmSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.Chm;
-
-            //BZip2
-            testSignature = new byte[Formats.BZip2Signature.Length];
-            Array.Copy(archiveFileSignature, testSignature, Formats.BZip2Signature.Length);
-            if (Formats.BZip2Signature.SequenceEqual(testSignature))
-                return SevenZipFormat.BZip2;
-            if (Formats.FlvSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.Flv;
-            if (Formats.SwfSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.Swf;
-            
-            //Zip & GZip & ARJ
-            testSignature = new byte[Formats.ZipSignature.Length];
-            Array.Copy(archiveFileSignature, testSignature, Formats.ZipSignature.Length);
-            if (Formats.ZipSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.Zip;
-            if (Formats.GZipSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.GZip;
-            if (Formats.ArjSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.Arj;
-
-            //LZH
-            testSignature = new byte[Formats.LzhSignature.Length];
-            Array.Copy(archiveFileSignature, 2, testSignature, 0, Formats.LzhSignature.Length);
-            if (Formats.LzhSignature.SequenceEqual(testSignature))
-                return SevenZipFormat.Lzh;
-
-            throw new SevenZipException(Path.GetExtension(archiveFilePath) + " is not a known archive type");
+            format = SevenZipFormat.Undefined;
+            return false;
         }
 
         ~ArchiveFile()

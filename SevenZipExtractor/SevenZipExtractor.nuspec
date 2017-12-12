@@ -2,9 +2,9 @@
 <package >
   <metadata>
     <id>SevenZipExtractor</id>
-    <version>1.0.10</version>
+    <version>1.0.11</version>
     <title>SevenZipExtractor</title>
-    <authors>Eugene Sichkar, Alexander Selishchev, @matortheeternal, Hajin Jang, Artem Tarasov</authors>
+    <authors>Eugene Sichkar, Alexander Selishchev, @matortheeternal, Hajin Jang, Artem Tarasov, Jose Pineiro</authors>
     <owners>Alexander Selishchev</owners>
     <projectUrl>https://github.com/adoconnection/SevenZipExtractor</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
