@@ -27,7 +27,7 @@ namespace SevenZipExtractor
             {"xar", SevenZipFormat.Xar},
             {"hfs", SevenZipFormat.Hfs},
             {"dmg", SevenZipFormat.Dmg},
-            {"Z", SevenZipFormat.Lzw},
+            {"z", SevenZipFormat.Lzw},
             {"xz", SevenZipFormat.XZ},
             {"flv", SevenZipFormat.Flv},
             {"swf", SevenZipFormat.Swf},
@@ -69,9 +69,44 @@ namespace SevenZipExtractor
             {SevenZipFormat.PE, new Guid("23170f69-40c1-278a-1000-000110DD0000")},
             {SevenZipFormat.Elf, new Guid("23170f69-40c1-278a-1000-000110DE0000")},
             {SevenZipFormat.Swf, new Guid("23170f69-40c1-278a-1000-000110D70000")},
-            {SevenZipFormat.Vhd, new Guid("23170f69-40c1-278a-1000-000110DC0000")}
+            {SevenZipFormat.Vhd, new Guid("23170f69-40c1-278a-1000-000110DC0000")},
+            {SevenZipFormat.Flv, new Guid("23170f69-40c1-278a-1000-000110D60000")},
+            {SevenZipFormat.SquashFS, new Guid("23170f69-40c1-278a-1000-000110D20000")},
+            {SevenZipFormat.Lzma86, new Guid("23170f69-40c1-278a-1000-0001100B0000")},
+            {SevenZipFormat.Ppmd, new Guid("23170f69-40c1-278a-1000-0001100D0000")},
+            {SevenZipFormat.TE, new Guid("23170f69-40c1-278a-1000-000110CF0000")},
+            {SevenZipFormat.UEFIc, new Guid("23170f69-40c1-278a-1000-000110D00000")},
+            {SevenZipFormat.UEFIs, new Guid("23170f69-40c1-278a-1000-000110D10000")},
+            {SevenZipFormat.CramFS, new Guid("23170f69-40c1-278a-1000-000110D30000")},
+            {SevenZipFormat.APM, new Guid("23170f69-40c1-278a-1000-000110D40000")},
+            {SevenZipFormat.Swfc, new Guid("23170f69-40c1-278a-1000-000110D80000")},
+            {SevenZipFormat.Ntfs, new Guid("23170f69-40c1-278a-1000-000110D90000")},
+            {SevenZipFormat.Fat, new Guid("23170f69-40c1-278a-1000-000110DA0000")},
+            {SevenZipFormat.Mbr, new Guid("23170f69-40c1-278a-1000-000110DB0000")},
+            {SevenZipFormat.MachO, new Guid("23170f69-40c1-278a-1000-000110DF0000")}
         };
 
-        internal static byte[] RarFiveSignature = new byte[] { 0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x01, 0x00 };
+        internal static Dictionary<SevenZipFormat, byte[]> FileSignatures = new Dictionary<SevenZipFormat, byte[]>
+        {
+            {SevenZipFormat.Rar5, new byte[] {0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x01, 0x00}},
+            {SevenZipFormat.Rar, new byte[] { 0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x00 }},
+            {SevenZipFormat.Vhd, new byte[] { 0x63, 0x6F, 0x6E, 0x65, 0x63, 0x74, 0x69, 0x78 }},
+            {SevenZipFormat.Deb, new byte[] { 0x21, 0x3C, 0x61, 0x72, 0x63, 0x68, 0x3E }},
+            {SevenZipFormat.Dmg, new byte[] { 0x78, 0x01, 0x73, 0x0D, 0x62, 0x62, 0x60 }},
+            {SevenZipFormat.SevenZip, new byte[] { 0x37, 0x7A, 0xBC, 0xAF, 0x27, 0x1C }},
+            {SevenZipFormat.Tar, new byte[] { 0x75, 0x73, 0x74, 0x61, 0x72 }},
+            {SevenZipFormat.Iso, new byte[] { 0x43, 0x44, 0x30, 0x30, 0x31 }},
+            {SevenZipFormat.Cab, new byte[] { 0x4D, 0x53, 0x43, 0x46 }},
+            {SevenZipFormat.Rpm, new byte[] { 0xed, 0xab, 0xee, 0xdb }},
+            {SevenZipFormat.Xar, new byte[] { 0x78, 0x61, 0x72, 0x21 }},
+            {SevenZipFormat.Chm, new byte[] { 0x49, 0x54, 0x53, 0x46 }},
+            {SevenZipFormat.BZip2, new byte[] { 0x42, 0x5A, 0x68 }},
+            {SevenZipFormat.Flv, new byte[] { 0x46, 0x4C, 0x56 }},
+            {SevenZipFormat.Swf, new byte[] { 0x46, 0x57, 0x53 }},
+            {SevenZipFormat.GZip, new byte[] { 0x1f, 0x0b }},
+            {SevenZipFormat.Zip, new byte[] { 0x50, 0x4b }},
+            {SevenZipFormat.Arj, new byte[] { 0x60, 0xEA }},
+            {SevenZipFormat.Lzh, new byte[] { 0x2D, 0x6C, 0x68 }}
+        };
     }
 }

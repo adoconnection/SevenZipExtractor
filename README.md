@@ -1,35 +1,55 @@
 # SevenZipExtractor
 C# wrapper for 7z.dll (x86 and x64 included) 
 
-Based on code from: http://www.codeproject.com/Articles/27148/C-NET-Interface-for-Zip-Archive-DLLs
+[![NuGet](https://img.shields.io/nuget/dt/SevenZipExtractor.svg?style=flat-square)](https://www.nuget.org/packages/SevenZipExtractor)
+[![NuGet](https://img.shields.io/nuget/v/SevenZipExtractor.svg?style=flat-square)](https://www.nuget.org/packages/SevenZipExtractor)
 
-Supported formats:
+
+## NuGet
+```
+Install-Package SevenZipExtractor
+```
+
+## Supported formats:
 * 7Zip
+* APM
 * Arj
 * BZip2
 * Cab
 * Chm
 * Compound
 * Cpio
+* CramFS
 * Deb
 * Dll
 * Dmg
 * Exe
+* Fat
 * Flv
 * GZip
 * Hfs
 * Iso
 * Lzh
 * Lzma
+* Lzma86
+* Mach-O
+* Mbr
 * Mub
 * Nsis
+* Ntfs
+* Ppmd
 * Rar
 * Rar5
 * Rpm
 * Split
+* SquashFS
 * Swf
+* Swfc
 * Tar
+* TE
 * Udf
+* UEFIc
+* UEFIs
 * Vhd
 * Wim
 * Xar
@@ -38,13 +58,11 @@ Supported formats:
 * Zip
 
 
-NuGet:
-```
-Install-Package SevenZipExtractor
-```
 
-Examples:
 
+## Examples
+
+#### Extract all
 ```cs
 using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
 {
@@ -53,6 +71,7 @@ using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
 
 ```
 
+#### Extract to file or stream
 ```cs
 using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
 {
@@ -71,10 +90,30 @@ using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
 
 ```
 
+#### Guess archive format from files without extensions
+```cs
+using (ArchiveFile archiveFile = new ArchiveFile(@"c:\random-archive"))
+{
+    archiveFile.Extract("Output"); 
+}
+```
+
+#### Guess archive format from streams
+```cs
+WebRequest request = WebRequest.Create ("http://www.contoso.com/file.aspx?id=12345");
+HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+using (ArchiveFile archiveFile = new ArchiveFile(response.GetResponseStream())
+{
+    archiveFile.Extract("Output"); 
+}
+```
+
 ## 7z.dll
-7z-x64.dll and 7z-x86.dll has to be in your binaries folder. In Solution Explorer set *Build action = Copy always* for both files
+7z.dll (x86 and x64) will be added to your BIN folder automatically.
 
 
 ## License
+- Based on code from: http://www.codeproject.com/Articles/27148/C-NET-Interface-for-Zip-Archive-DLLs
 - Source code in this repo is licensed under The MIT License
 - 7z binaries license http://www.7-zip.org/license.txt

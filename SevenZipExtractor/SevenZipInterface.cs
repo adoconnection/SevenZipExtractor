@@ -1,13 +1,22 @@
 // Version 1.5
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Permissions;
 using System.Threading;
 
 namespace SevenZipExtractor
 {
-    [StructLayout(LayoutKind.Explicit, Size = 16)]
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct PropArray
+    {
+        uint length;
+        IntPtr pointerValues;
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
     internal struct PropVariant
     {
         [DllImport("ole32.dll")]
@@ -18,10 +27,14 @@ namespace SevenZipExtractor
         [FieldOffset(8)] public byte byteValue;
         [FieldOffset(8)] public long longValue;
         [FieldOffset(8)] public System.Runtime.InteropServices.ComTypes.FILETIME filetime;
+        [FieldOffset(8)] public PropArray propArray;
 
         public VarEnum VarType
         {
-            get { return (VarEnum) this.vt; }
+            get
+            {
+                return (VarEnum) this.vt;
+            }
         }
 
         public void Clear()
@@ -30,6 +43,7 @@ namespace SevenZipExtractor
             {
                 case VarEnum.VT_EMPTY:
                     break;
+
                 case VarEnum.VT_NULL:
                 case VarEnum.VT_I2:
                 case VarEnum.VT_I4:
@@ -52,6 +66,7 @@ namespace SevenZipExtractor
                 case VarEnum.VT_FILETIME:
                     this.vt = 0;
                     break;
+
                 default:
                     PropVariantClear(ref this);
                     break;
@@ -64,10 +79,13 @@ namespace SevenZipExtractor
             {
                 case VarEnum.VT_EMPTY:
                     return null;
+
                 case VarEnum.VT_FILETIME:
                     return DateTime.FromFileTime(this.longValue);
+
                 default:
                     GCHandle PropHandle = GCHandle.Alloc(this, GCHandleType.Pinned);
+
                     try
                     {
                         return Marshal.GetObjectForNativeVariant(PropHandle.AddrOfPinnedObject());
