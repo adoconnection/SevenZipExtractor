@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace SevenZipExtractor
 {
@@ -13,7 +14,13 @@ namespace SevenZipExtractor
             this.index = index;
         }
 
+        /// <summary>
+        /// Name of the file with its relative path within the archive
+        /// </summary>
         public string FileName { get; internal set; }
+        /// <summary>
+        /// True if entry is a folder, false if it is a file
+        /// </summary>
         public bool IsFolder { get; internal set; }
         /// <summary>
         /// Original entry size
@@ -23,6 +30,51 @@ namespace SevenZipExtractor
         /// Entry size in a archived state
         /// </summary>
         public ulong PackedSize { get; internal set; }
+
+        /// <summary>
+        /// Date and time of the file (entry) creation
+        /// </summary>
+        public DateTime CreationTime { get; internal set; }
+
+        /// <summary>
+        /// Date and time of the last change of the file (entry)
+        /// </summary>
+        public DateTime LastWriteTime { get; internal set; }
+
+        /// <summary>
+        /// Date and time of the last access of the file (entry)
+        /// </summary>
+        public DateTime LastAccessTime { get; internal set; }
+        
+        /// <summary>
+        /// CRC hash of the entry
+        /// </summary>
+        public UInt32 CRC { get; set; }
+
+        /// <summary>
+        /// Attributes of the entry
+        /// </summary>
+        public UInt32 Attributes { get; set; }
+
+        /// <summary>
+        /// True if entry is encrypted, otherwise false
+        /// </summary>
+        public bool IsEncrypted { get; set; }
+
+        /// <summary>
+        /// Comment of the entry
+        /// </summary>
+        public string Comment { get; set; }
+
+        /// <summary>
+        /// Compression method of the entry
+        /// </summary>
+        public string Method { get; set; }
+
+        /// <summary>
+        /// Host operating system of the entry
+        /// </summary>
+        public string HostOS { get; set; }
 
         public void Extract(string fileName)
         {
