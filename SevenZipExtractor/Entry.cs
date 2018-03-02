@@ -49,32 +49,32 @@ namespace SevenZipExtractor
         /// <summary>
         /// CRC hash of the entry
         /// </summary>
-        public UInt32 CRC { get; set; }
+        public UInt32 CRC { get; internal set; }
 
         /// <summary>
         /// Attributes of the entry
         /// </summary>
-        public UInt32 Attributes { get; set; }
+        public UInt32 Attributes { get; internal set; }
 
         /// <summary>
         /// True if entry is encrypted, otherwise false
         /// </summary>
-        public bool IsEncrypted { get; set; }
+        public bool IsEncrypted { get; internal set; }
 
         /// <summary>
         /// Comment of the entry
         /// </summary>
-        public string Comment { get; set; }
+        public string Comment { get; internal set; }
 
         /// <summary>
         /// Compression method of the entry
         /// </summary>
-        public string Method { get; set; }
+        public string Method { get; internal set; }
 
         /// <summary>
         /// Host operating system of the entry
         /// </summary>
-        public string HostOS { get; set; }
+        public string HostOS { get; internal set; }
 
         public void Extract(string fileName)
         {
