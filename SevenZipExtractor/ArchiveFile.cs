@@ -179,6 +179,9 @@ namespace SevenZipExtractor
                     string hostOS = this.GetProperty<string>(fileIndex, ItemPropId.kpidHostOS);
                     string method = this.GetProperty<string>(fileIndex, ItemPropId.kpidMethod);
 
+                    bool isSplitBefore = this.GetProperty<bool>(fileIndex, ItemPropId.kpidSplitBefore);
+                    bool isSplitAfter = this.GetProperty<bool>(fileIndex, ItemPropId.kpidSplitAfter);
+
                     this.entries.Add(new Entry(this.archive, fileIndex)
                     {
                         FileName = fileName,
@@ -188,11 +191,14 @@ namespace SevenZipExtractor
                         PackedSize = packedSize,
                         CreationTime = creationTime,
                         LastWriteTime = lastWriteTime,
+                        LastAccessTime = lastAccessTime,
                         CRC = crc,
                         Attributes = attributes,
                         Comment = comment,
                         HostOS = hostOS,
                         Method = method,
+                        IsSplitBefore = isSplitBefore,
+                        IsSplitAfter = isSplitAfter
                     });
                 }
 

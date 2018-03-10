@@ -76,6 +76,16 @@ namespace SevenZipExtractor
         /// </summary>
         public string HostOS { get; internal set; }
 
+        /// <summary>
+        /// True if there are parts of this file in previous split archive parts
+        /// </summary>
+        public bool IsSplitBefore { get; set; }
+
+        /// <summary>
+        /// True if there are parts of this file in next split archive parts
+        /// </summary>
+        public bool IsSplitAfter { get; set; }
+
         public void Extract(string fileName)
         {
             if (this.IsFolder)

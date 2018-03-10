@@ -11,6 +11,7 @@ namespace SevenZipExtractor
         public SevenZipHandle(string sevenZipLibPath)
         {
             this.sevenZipSafeHandle = Kernel32Dll.LoadLibrary(sevenZipLibPath);
+
             if (this.sevenZipSafeHandle.IsInvalid)
             {
                 throw new Win32Exception();
