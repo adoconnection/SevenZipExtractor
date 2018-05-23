@@ -67,7 +67,7 @@ namespace SevenZipExtractor
                 }
                 else
                 {
-                    throw new SevenZipException("Unable to guess format autmatically");
+                    throw new SevenZipException("Unable to guess format automatically");
                 }
             }
 
@@ -167,15 +167,38 @@ namespace SevenZipExtractor
                 {
                     string fileName = this.GetProperty<string>(fileIndex, ItemPropId.kpidPath);
                     bool isFolder = this.GetProperty<bool>(fileIndex, ItemPropId.kpidIsFolder);
+                    bool isEncrypted = this.GetProperty<bool>(fileIndex, ItemPropId.kpidEncrypted);
                     ulong size = this.GetProperty<ulong>(fileIndex, ItemPropId.kpidSize);
                     ulong packedSize = this.GetProperty<ulong>(fileIndex, ItemPropId.kpidPackedSize);
+                    DateTime creationTime = this.GetProperty<DateTime>(fileIndex, ItemPropId.kpidCreationTime);
+                    DateTime lastWriteTime = this.GetProperty<DateTime>(fileIndex, ItemPropId.kpidLastWriteTime);
+                    DateTime lastAccessTime = this.GetProperty<DateTime>(fileIndex, ItemPropId.kpidLastAccessTime); 
+                    UInt32 crc = this.GetProperty<UInt32>(fileIndex, ItemPropId.kpidCRC);
+                    UInt32 attributes = this.GetProperty<UInt32>(fileIndex, ItemPropId.kpidAttributes);
+                    string comment = this.GetProperty<string>(fileIndex, ItemPropId.kpidComment);
+                    string hostOS = this.GetProperty<string>(fileIndex, ItemPropId.kpidHostOS);
+                    string method = this.GetProperty<string>(fileIndex, ItemPropId.kpidMethod);
+
+                    bool isSplitBefore = this.GetProperty<bool>(fileIndex, ItemPropId.kpidSplitBefore);
+                    bool isSplitAfter = this.GetProperty<bool>(fileIndex, ItemPropId.kpidSplitAfter);
 
                     this.entries.Add(new Entry(this.archive, fileIndex)
                     {
                         FileName = fileName,
                         IsFolder = isFolder,
+                        IsEncrypted = isEncrypted,
                         Size = size,
-                        PackedSize = packedSize
+                        PackedSize = packedSize,
+                        CreationTime = creationTime,
+                        LastWriteTime = lastWriteTime,
+                        LastAccessTime = lastAccessTime,
+                        CRC = crc,
+                        Attributes = attributes,
+                        Comment = comment,
+                        HostOS = hostOS,
+                        Method = method,
+                        IsSplitBefore = isSplitBefore,
+                        IsSplitAfter = isSplitAfter
                     });
                 }
 
