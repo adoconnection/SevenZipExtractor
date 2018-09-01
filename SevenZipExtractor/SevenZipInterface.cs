@@ -143,7 +143,7 @@ namespace SevenZipExtractor
         kSkip
     }
 
-    internal enum OperationResult : int
+    public enum OperationResult : int
     {
         kOK = 0,
         kUnSupportedMethod,

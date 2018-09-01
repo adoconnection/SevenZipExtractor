@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using static SevenZipExtractor.ArchiveStreamsCallbackEx;
 
 namespace SevenZipExtractor
 {
@@ -93,6 +94,63 @@ namespace SevenZipExtractor
 
                 return null;
             });
+        }
+
+        public void Extract(Func<Entry, Stream> getOutputStream)
+        {
+            IList<Stream> fileStreams = new List<Stream>();
+
+            try
+            {
+                foreach (Entry entry in Entries)
+                {
+                    var outputStream = getOutputStream(entry);
+
+                    if (outputStream == null)
+                    {
+                        fileStreams.Add(null);
+                        continue;
+                    }
+                    if (entry.IsFolder)
+                    {
+                        fileStreams.Add(null);
+                        continue;
+                    }
+                    fileStreams.Add(outputStream);
+                }
+
+                archive.Extract(null, 0xFFFFFFFF, 0, new ArchiveStreamsCallback(fileStreams));
+            }
+            finally
+            {
+            }
+        }
+
+        public void Extract(Func<Entry, Stream> before, Action<OperationResult> after)
+        {
+            IList<Operation> operations = new List<Operation>();
+            try
+            {
+                foreach (Entry entry in Entries)
+                {
+                    var op = new Operation()
+                    {
+                        Entry = entry,
+                        Before = before,
+                        After = after
+                    };
+                    if (entry.IsFolder)
+                    {
+                        operations.Add(null);
+                        continue;
+                    }
+                    operations.Add(op);
+                }
+                archive.Extract(null, 0xFFFFFFFF, 0, new ArchiveStreamsCallbackEx(operations));
+            }
+            finally
+            {
+            }
         }
 
         public void Extract(Func<Entry, string> getOutputPath) 

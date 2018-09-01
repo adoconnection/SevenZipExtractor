@@ -90,6 +90,36 @@ using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
 
 ```
 
+#### Alternative multi-extraction pattern:
+```cs
+using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
+{
+    byte[] backingArray = null;
+    MemoryStream outStr = null;
+    Entry entry = null;
+    Stream before(Entry _entry)
+    {
+        if (_entry.IsFolder || _entry.Size < 1)
+            return null;
+        entry = _entry;
+        backingArray = new byte[_entry.Size];
+        outStr = new MemoryStream(backingArray);
+        return outStr;
+    }
+    void after(OperationResult opRes)
+    {
+        if (opRes == OperationResult.kOK)
+        {
+            // do whatever with Entry and extracted data
+        }
+        outStr.Dispose();
+        backingArray = null;
+    }
+    archiveFile.Extract(before, after);
+}
+
+```
+
 #### Guess archive format from files without extensions
 ```cs
 using (ArchiveFile archiveFile = new ArchiveFile(@"c:\random-archive"))
