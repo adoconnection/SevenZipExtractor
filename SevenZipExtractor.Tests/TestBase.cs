@@ -7,7 +7,7 @@ namespace SevenZipExtractor.Tests
 {
     public abstract class TestBase
     {
-        protected IList<TestFileEntry> TestEntries = new List<TestFileEntry>()
+        protected IList<TestFileEntry> TestEntriesWithFolder = new List<TestFileEntry>()
         {
                 new TestFileEntry { Name = "image1.jpg", IsFolder = false, MD5 = "b3144b66569ab0052b4019a2b4c07a31"},
                 new TestFileEntry { Name = "image2.jpg", IsFolder = false, MD5 = "8fdd4013edcf04b335ac3a9ce0c13887"},
@@ -15,11 +15,18 @@ namespace SevenZipExtractor.Tests
                 new TestFileEntry { Name = "testFolder\\image3.jpg", IsFolder = false, MD5 = "24ffd227340432596fe61ef6300098ad"},
         };
 
-        protected void TestExtractToStream(byte[] archiveBytes, IList<TestFileEntry> expected)
+        protected IList<TestFileEntry> TestEntriesWithoutFolder = new List<TestFileEntry>()
+        {
+                new TestFileEntry { Name = "image1.jpg", IsFolder = false, MD5 = "b3144b66569ab0052b4019a2b4c07a31"},
+                new TestFileEntry { Name = "image2.jpg", IsFolder = false, MD5 = "8fdd4013edcf04b335ac3a9ce0c13887"},
+                new TestFileEntry { Name = "testFolder\\image3.jpg", IsFolder = false, MD5 = "24ffd227340432596fe61ef6300098ad"},
+        };
+
+        protected void TestExtractToStream(byte[] archiveBytes, IList<TestFileEntry> expected, SevenZipFormat? sevenZipFormat = null)
         {
             MemoryStream memoryStream = new MemoryStream(archiveBytes);
 
-            using (ArchiveFile archiveFile = new ArchiveFile(memoryStream))
+            using (ArchiveFile archiveFile = new ArchiveFile(memoryStream, sevenZipFormat))
             {
                 foreach (TestFileEntry testEntry in expected)
                 {

@@ -6,9 +6,15 @@ namespace SevenZipExtractor.Tests
     public class TestZip : TestBase
     {
         [TestMethod]
-        public void TestExtractToStream()
+        public void TestGuessAndExtractToStream_OK()
         {
-           this.TestExtractToStream(Resources.TestFiles.zip, this.TestEntries);
+            this.TestExtractToStream(Resources.TestFiles.zip, this.TestEntriesWithFolder);
+        }
+
+        [TestMethod]
+        public void TestKnownFormatAndExtractToStream_OK()
+        {
+            this.TestExtractToStream(Resources.TestFiles.zip, this.TestEntriesWithFolder, SevenZipFormat.Zip);
         }
     }
 }

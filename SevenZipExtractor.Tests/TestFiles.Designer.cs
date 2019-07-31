@@ -63,6 +63,16 @@ namespace Resources {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] lzh {
+            get {
+                object obj = ResourceManager.GetObject("lzh", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] rar {
             get {
                 object obj = ResourceManager.GetObject("rar", resourceCulture);

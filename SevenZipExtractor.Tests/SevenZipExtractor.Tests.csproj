@@ -58,12 +58,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TestFiles.resx</DependentUpon>
     </Compile>
+    <Compile Include="TestLzh.cs" />
     <Compile Include="TestRar.cs" />
     <Compile Include="TestZip.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\lzh.lzh" />
     <None Include="Resources\rar.rar" />
     <None Include="Resources\zip.zip" />
   </ItemGroup>
