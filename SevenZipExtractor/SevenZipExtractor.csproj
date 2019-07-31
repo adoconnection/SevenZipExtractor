@@ -60,6 +60,9 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="7zDll\" />
+  </ItemGroup>
   <!--
   <ItemGroup>
     <Content Include="7z-x64.dll">

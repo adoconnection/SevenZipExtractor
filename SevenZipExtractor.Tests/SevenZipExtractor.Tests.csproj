@@ -65,8 +65,6 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\rar.rar" />
-    <None Include="Resources\test.rar" />
-    <None Include="Resources\test.zip" />
     <None Include="Resources\zip.zip" />
   </ItemGroup>
   <ItemGroup>

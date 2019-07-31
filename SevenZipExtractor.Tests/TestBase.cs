@@ -27,13 +27,15 @@ namespace SevenZipExtractor.Tests
 
                     Assert.IsNotNull(entry, "Entry not found: " + testEntry.Name);
 
-                    if (!testEntry.IsFolder)
+                    if (testEntry.IsFolder)
                     {
-                        using (MemoryStream entryMemoryStream = new MemoryStream())
-                        {
-                            entry.Extract(entryMemoryStream);
-                            Assert.AreEqual(testEntry.MD5, entryMemoryStream.ToArray().MD5String(), "MD5 does not match: " + entry.FileName);
-                        }
+                        continue;
+                    }
+
+                    using (MemoryStream entryMemoryStream = new MemoryStream())
+                    {
+                        entry.Extract(entryMemoryStream);
+                        Assert.AreEqual(testEntry.MD5, entryMemoryStream.ToArray().MD5String(), "MD5 does not match: " + entry.FileName);
                     }
                 }
             }
