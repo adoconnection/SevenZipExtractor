@@ -50,7 +50,7 @@ Install-Package SevenZipExtractor
 * Udf
 * UEFIc
 * UEFIs
-* Vhd
+* Vhd (?)
 * Wim
 * Xar
 * XZ

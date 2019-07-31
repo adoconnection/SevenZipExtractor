@@ -212,7 +212,7 @@ namespace SevenZipExtractor
             this.archive.GetProperty(fileIndex, name, ref propVariant);
 
             T result = propVariant.VarType != VarEnum.VT_EMPTY
-                ? (T) propVariant.GetObject()
+                ? (T)(dynamic) propVariant.GetObject()
                 : default(T);
 
             propVariant.Clear();
