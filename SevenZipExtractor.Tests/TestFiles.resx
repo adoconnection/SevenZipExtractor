@@ -124,6 +124,9 @@
   <data name="rar" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\rar.rar;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="SevenZip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\SevenZip.7z;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\zip.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MD5Helper.cs" />
+    <Compile Include="Test7Zip.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="TestFileEntry.cs" />
     <Compile Include="TestFiles.Designer.cs">
@@ -65,8 +66,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\7z.7z" />
     <None Include="Resources\lzh.lzh" />
     <None Include="Resources\rar.rar" />
+    <None Include="Resources\SevenZip.7z" />
     <None Include="Resources\zip.zip" />
   </ItemGroup>
   <ItemGroup>

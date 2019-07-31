@@ -83,6 +83,16 @@ namespace Resources {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] SevenZip {
+            get {
+                object obj = ResourceManager.GetObject("SevenZip", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] zip {
             get {
                 object obj = ResourceManager.GetObject("zip", resourceCulture);
