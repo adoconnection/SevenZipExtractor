@@ -6,7 +6,7 @@ C# wrapper for 7z.dll (x86 and x64 included)
 
 Hooray! 🎉✨ 20 000 downloads, like, subscribe, repost :)
 
-Every single star make maintainer happy! ⭐
+Every single star makes maintainer happy! ⭐
 
 ## NuGet
 ```
