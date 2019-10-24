@@ -86,7 +86,7 @@ namespace SevenZipExtractor
         /// </summary>
         public bool IsSplitAfter { get; set; }
 
-        public void Extract(string fileName)
+        public void Extract(string fileName, bool preserveTimestamp = true)
         {
             if (this.IsFolder)
             {
@@ -104,6 +104,11 @@ namespace SevenZipExtractor
             using (FileStream fileStream = File.Create(fileName))
             {
                 this.Extract(fileStream);
+            }
+
+            if (preserveTimestamp)
+            {
+                File.SetLastWriteTime(fileName, this.LastWriteTime);
             }
         }
         public void Extract(Stream stream)
