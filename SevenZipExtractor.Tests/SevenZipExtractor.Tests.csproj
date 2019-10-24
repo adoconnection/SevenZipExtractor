@@ -50,7 +50,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MD5Helper.cs" />
+    <Compile Include="ArjTest.cs" />
+    <Compile Include="Crc32.cs" />
+    <Compile Include="HashHelper.cs" />
     <Compile Include="Test7Zip.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="TestFileEntry.cs" />
@@ -67,6 +69,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\7z.7z" />
+    <None Include="Resources\ansimate-arj.arj" />
     <None Include="Resources\lzh.lzh" />
     <None Include="Resources\rar.rar" />
     <None Include="Resources\SevenZip.7z" />

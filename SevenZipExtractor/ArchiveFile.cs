@@ -170,17 +170,17 @@ namespace SevenZipExtractor
                     bool isEncrypted = this.GetProperty<bool>(fileIndex, ItemPropId.kpidEncrypted);
                     ulong size = this.GetProperty<ulong>(fileIndex, ItemPropId.kpidSize);
                     ulong packedSize = this.GetProperty<ulong>(fileIndex, ItemPropId.kpidPackedSize);
-                    DateTime creationTime = this.GetProperty<DateTime>(fileIndex, ItemPropId.kpidCreationTime);
-                    DateTime lastWriteTime = this.GetProperty<DateTime>(fileIndex, ItemPropId.kpidLastWriteTime);
-                    DateTime lastAccessTime = this.GetProperty<DateTime>(fileIndex, ItemPropId.kpidLastAccessTime); 
-                    UInt32 crc = this.GetProperty<UInt32>(fileIndex, ItemPropId.kpidCRC);
-                    UInt32 attributes = this.GetProperty<UInt32>(fileIndex, ItemPropId.kpidAttributes);
-                    string comment = this.GetProperty<string>(fileIndex, ItemPropId.kpidComment);
-                    string hostOS = this.GetProperty<string>(fileIndex, ItemPropId.kpidHostOS);
-                    string method = this.GetProperty<string>(fileIndex, ItemPropId.kpidMethod);
+                    DateTime creationTime = this.GetPropertySafe<DateTime>(fileIndex, ItemPropId.kpidCreationTime);
+                    DateTime lastWriteTime = this.GetPropertySafe<DateTime>(fileIndex, ItemPropId.kpidLastWriteTime);
+                    DateTime lastAccessTime = this.GetPropertySafe<DateTime>(fileIndex, ItemPropId.kpidLastAccessTime);
+                    uint crc = this.GetPropertySafe<uint>(fileIndex, ItemPropId.kpidCRC);
+                    uint attributes = this.GetPropertySafe<uint>(fileIndex, ItemPropId.kpidAttributes);
+                    string comment = this.GetPropertySafe<string>(fileIndex, ItemPropId.kpidComment);
+                    string hostOS = this.GetPropertySafe<string>(fileIndex, ItemPropId.kpidHostOS);
+                    string method = this.GetPropertySafe<string>(fileIndex, ItemPropId.kpidMethod);
 
-                    bool isSplitBefore = this.GetProperty<bool>(fileIndex, ItemPropId.kpidSplitBefore);
-                    bool isSplitAfter = this.GetProperty<bool>(fileIndex, ItemPropId.kpidSplitAfter);
+                    bool isSplitBefore = this.GetPropertySafe<bool>(fileIndex, ItemPropId.kpidSplitBefore);
+                    bool isSplitAfter = this.GetPropertySafe<bool>(fileIndex, ItemPropId.kpidSplitAfter);
 
                     this.entries.Add(new Entry(this.archive, fileIndex)
                     {
@@ -206,16 +206,41 @@ namespace SevenZipExtractor
             }
         }
 
+        private T GetPropertySafe<T>(uint fileIndex, ItemPropId name)
+        {
+            try
+            {
+                return this.GetProperty<T>(fileIndex, name);
+            }
+            catch (InvalidCastException)
+            {
+                return default(T);
+            }
+        }
+
         private T GetProperty<T>(uint fileIndex, ItemPropId name)
         {
             PropVariant propVariant = new PropVariant();
             this.archive.GetProperty(fileIndex, name, ref propVariant);
+            object value = propVariant.GetObject();
 
-            T result = propVariant.VarType != VarEnum.VT_EMPTY
-                ? (T)(dynamic) propVariant.GetObject()
-                : default(T);
+            if (propVariant.VarType == VarEnum.VT_EMPTY)
+            {
+                return default(T);
+            }
 
             propVariant.Clear();
+
+            if (value == null)
+            {
+                return default(T);
+            }
+
+            Type type = typeof(T);
+            bool isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+            Type underlyingType = isNullable ? Nullable.GetUnderlyingType(type) : type;
+
+            T result = (T)Convert.ChangeType(value.ToString(), underlyingType);
 
             return result;
         }

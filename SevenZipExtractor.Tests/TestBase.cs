@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -42,7 +43,16 @@ namespace SevenZipExtractor.Tests
                     using (MemoryStream entryMemoryStream = new MemoryStream())
                     {
                         entry.Extract(entryMemoryStream);
-                        Assert.AreEqual(testEntry.MD5, entryMemoryStream.ToArray().MD5String(), "MD5 does not match: " + entry.FileName);
+
+                        if (testEntry.MD5 != null)
+                        {
+                            Assert.AreEqual(testEntry.MD5, entryMemoryStream.ToArray().MD5String(), "MD5 does not match: " + entry.FileName);
+                        }
+
+                        if (testEntry.CRC32 != null)
+                        {
+                            Assert.AreEqual(testEntry.CRC32, entryMemoryStream.ToArray().CRC32String(), "CRC32 does not match: " + entry.FileName);
+                        }
                     }
                 }
             }
