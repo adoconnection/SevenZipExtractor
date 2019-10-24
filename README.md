@@ -120,3 +120,10 @@ using (ArchiveFile archiveFile = new ArchiveFile(response.GetResponseStream())
 - Based on code from: http://www.codeproject.com/Articles/27148/C-NET-Interface-for-Zip-Archive-DLLs
 - Source code in this repo is licensed under The MIT License
 - 7z binaries license http://www.7-zip.org/license.txt
+
+
+
+## Changelog
+1.0.14
+- Entry.Extrat - preserveTimestamp is true by default #34
+- Dynamic operations can only be performed in homogenous AppDomain" #36
