@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace SevenZipExtractor.Tests
 {
     [TestClass]
-    public class ArjTest : TestBase
+    public class TestArj : TestBase
     {
         [TestMethod]
         public void Text_UnboxAndCast_OK()

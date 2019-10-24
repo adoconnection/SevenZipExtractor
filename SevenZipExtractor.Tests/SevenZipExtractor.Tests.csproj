@@ -50,7 +50,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArjTest.cs" />
+    <Compile Include="TestArj.cs" />
     <Compile Include="Crc32.cs" />
     <Compile Include="HashHelper.cs" />
     <Compile Include="Test7Zip.cs" />
