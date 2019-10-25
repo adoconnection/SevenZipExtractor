@@ -226,6 +226,7 @@ namespace SevenZipExtractor
 
             if (propVariant.VarType == VarEnum.VT_EMPTY)
             {
+                propVariant.Clear();
                 return default(T);
             }
 
