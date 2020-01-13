@@ -1,4 +1,4 @@
-<!-- Based on https://stackoverflow.com/a/30316946 -->
+<!-- Based on https://www.dxsdata.com/2019/02/visual-studio-adding-unmanaged-dll-or-any-file-to-projects-nuget-package-output/ -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!--
   ******************************************************************************
