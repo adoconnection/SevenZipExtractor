@@ -1,5 +1,7 @@
 # SevenZipExtractor
 C# wrapper for 7z.dll (x86 and x64 included) 
+- .NET Standard 2.0
+- .NET Framework 4.5
 
 [![NuGet](https://img.shields.io/nuget/dt/SevenZipExtractor.svg?style=flat-square)](https://www.nuget.org/packages/SevenZipExtractor)
 [![NuGet](https://img.shields.io/nuget/v/SevenZipExtractor.svg?style=flat-square)](https://www.nuget.org/packages/SevenZipExtractor)
