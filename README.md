@@ -125,7 +125,7 @@ using (ArchiveFile archiveFile = new ArchiveFile(response.GetResponseStream())
 
 ## Changelog
 1.0.15 / 2020.01.14
-- .NETStandard 2.0. support PR#38
+- .NETStandard 2.0 support PR#38
 
 1.0.14
 - Entry.Extrat - preserveTimestamp is true by default #34
