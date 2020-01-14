@@ -12,7 +12,7 @@ namespace ConsoleApplication86
             using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.arj"))
             {
                 // extract all
-                archiveFile.Extract("Output"); 
+                archiveFile.Extract("Output");
             }
 
             using (ArchiveFile archiveFile = new ArchiveFile("archive.arj"))
