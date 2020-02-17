@@ -114,6 +114,12 @@ using (ArchiveFile archiveFile = new ArchiveFile(response.GetResponseStream())
 }
 ```
 
+## Wiki
+* [Extracting from solid archives](https://github.com/adoconnection/SevenZipExtractor/wiki/Extracting-from-solid-archives)
+* [Extract tar.gz, tag.xz](https://github.com/adoconnection/SevenZipExtractor/wiki/Extract-tar.gz,-tag.xz)
+
+
+
 ## 7z.dll
 7z.dll (x86 and x64) will be added to your BIN folder automatically.
 
