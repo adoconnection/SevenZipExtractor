@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 
 namespace SevenZipExtractor
 {
-    internal class ArchiveStreamsCallback : IArchiveExtractCallback
+    internal class ArchiveStreamCallback : IArchiveExtractCallback
     {
-        private readonly IList<Stream> streams;
+        private readonly uint fileNumber;
+        private readonly Stream stream;
 
-        public ArchiveStreamsCallback(IList<Stream> streams) 
+        public ArchiveStreamCallback(uint fileNumber, Stream stream)
         {
-            this.streams = streams;
+            this.fileNumber = fileNumber;
+            this.stream = stream;
         }
 
         public void SetTotal(ulong total)
@@ -22,21 +23,7 @@ namespace SevenZipExtractor
 
         public int GetStream(uint index, out ISequentialOutStream outStream, AskMode askExtractMode)
         {
-            if (askExtractMode != AskMode.kExtract)
-            {
-                outStream = null;
-                return 0;
-            }
-
-            if (this.streams == null)
-            {
-                outStream = null;
-                return 0;
-            }
-
-            Stream stream = this.streams[(int) index];
-
-            if (stream == null)
+            if (index != fileNumber || askExtractMode != AskMode.kExtract)
             {
                 outStream = null;
                 return 0;
