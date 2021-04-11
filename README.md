@@ -6,7 +6,7 @@ C# wrapper for 7z.dll (x86 and x64 included)
 [![NuGet](https://img.shields.io/nuget/dt/SevenZipExtractor.svg?style=flat-square)](https://www.nuget.org/packages/SevenZipExtractor)
 [![NuGet](https://img.shields.io/nuget/v/SevenZipExtractor.svg?style=flat-square)](https://www.nuget.org/packages/SevenZipExtractor)
 
-Hooray! 🎉✨ ~~30 000~~ 80 000 downloads, like, subscribe, repost :)
+Hooray! 🎉✨ 100 000 downloads, like, subscribe, repost :)
 
 Every single star makes maintainer happy! ⭐
 
