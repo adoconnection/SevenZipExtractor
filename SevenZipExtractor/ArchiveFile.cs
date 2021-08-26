@@ -45,7 +45,7 @@ namespace SevenZipExtractor
             this.archive = this.sevenZipHandle.CreateInArchive(Formats.FormatGuidMapping[format]);
             this.archiveStream = new InStreamWrapper(File.OpenRead(archiveFilePath));
         }
-        
+
         public ArchiveFile(Stream archiveStream, SevenZipFormat? format = null, string libraryFilePath = null)
         {
             this.libraryFilePath = libraryFilePath;
@@ -75,9 +75,9 @@ namespace SevenZipExtractor
             this.archiveStream = new InStreamWrapper(archiveStream);
         }
 
-        public void Extract(string outputFolder, bool overwrite = false) 
+        public void Extract(string outputFolder, bool overwrite = false)
         {
-            this.Extract(entry => 
+            this.Extract(entry =>
             {
                 string fileName = Path.Combine(outputFolder, entry.FileName);
 
@@ -86,7 +86,7 @@ namespace SevenZipExtractor
                     return fileName;
                 }
 
-                if (!File.Exists(fileName) || overwrite) 
+                if (!File.Exists(fileName) || overwrite)
                 {
                     return fileName;
                 }
@@ -95,11 +95,11 @@ namespace SevenZipExtractor
             });
         }
 
-        public void Extract(Func<Entry, string> getOutputPath) 
+        public void Extract(Func<Entry, string> getOutputPath)
         {
             IList<Stream> fileStreams = new List<Stream>();
 
-            try 
+            try
             {
                 foreach (Entry entry in Entries)
                 {
@@ -132,7 +132,7 @@ namespace SevenZipExtractor
             }
             finally
             {
-                foreach (Stream stream in fileStreams) 
+                foreach (Stream stream in fileStreams)
                 {
                     if (stream != null)
                     {
@@ -259,6 +259,10 @@ namespace SevenZipExtractor
                 else if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "7z-" + currentArchitecture + ".dll")))
                 {
                     this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "7z-" + currentArchitecture + ".dll");
+                }
+                else if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", currentArchitecture, "7z.dll")))
+                {
+                    this.libraryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", currentArchitecture, "7z.dll");
                 }
                 else if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, currentArchitecture, "7z.dll")))
                 {
