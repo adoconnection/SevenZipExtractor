@@ -106,7 +106,8 @@ namespace SevenZipExtractor
             {SevenZipFormat.GZip, new byte[] { 0x1f, 0x0b }},
             {SevenZipFormat.Zip, new byte[] { 0x50, 0x4b }},
             {SevenZipFormat.Arj, new byte[] { 0x60, 0xEA }},
-            {SevenZipFormat.Lzh, new byte[] { 0x2D, 0x6C, 0x68 }}
+            {SevenZipFormat.Lzh, new byte[] { 0x2D, 0x6C, 0x68 }},
+            {SevenZipFormat.SquashFS, new byte[] {0x68, 0x73, 0x71, 0x73}}
         };
     }
 }
