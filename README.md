@@ -6,8 +6,6 @@ C# wrapper for 7z.dll (x86 and x64 included)
 [![NuGet](https://img.shields.io/nuget/dt/SevenZipExtractor.svg?style=flat-square)](https://www.nuget.org/packages/SevenZipExtractor)
 [![NuGet](https://img.shields.io/nuget/v/SevenZipExtractor.svg?style=flat-square)](https://www.nuget.org/packages/SevenZipExtractor)
 
-Hooray! 🎉✨ 100 000 downloads, like, subscribe, repost :)
-
 Every single star makes maintainer happy! ⭐
 
 ## NuGet
@@ -132,6 +130,11 @@ using (ArchiveFile archiveFile = new ArchiveFile(response.GetResponseStream())
 
 
 ## Changelog
+1.0.16 / 2021.01.17
+- 7z binaries updated to 21.07.0.0
+- PR#56 - signature for ```SquashFS``` (Thanks [mmoosstt](https://github.com/mmoosstt))
+- PR#53 - look for binaries in ```bin``` folder (Thanks [CupSunshine](https://github.com/CupSunshine))
+
 1.0.15 / 2020.01.14
 - .NETStandard 2.0 support PR#38
 
