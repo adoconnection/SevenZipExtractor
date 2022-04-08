@@ -130,6 +130,9 @@ using (ArchiveFile archiveFile = new ArchiveFile(response.GetResponseStream())
 
 
 ## Changelog
+1.0.17 / 2022.04.08
+- #54 4Gb+ archives fixed! 🎉 (Thanks [Pyroluk](https://github.com/Pyroluk))
+
 1.0.16 / 2021.01.17
 - 7z binaries updated to 21.07.0.0
 - PR#56 - signature for ```SquashFS``` (Thanks [mmoosstt](https://github.com/mmoosstt))
