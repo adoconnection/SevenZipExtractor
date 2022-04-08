@@ -411,7 +411,7 @@ namespace SevenZipExtractor
 
         public virtual void Seek(long offset, uint seekOrigin, IntPtr newPosition)
         {
-            long Position = (uint) this.BaseStream.Seek(offset, (SeekOrigin) seekOrigin);
+            long Position = this.BaseStream.Seek(offset, (SeekOrigin) seekOrigin);
 
             if (newPosition != IntPtr.Zero)
             {
