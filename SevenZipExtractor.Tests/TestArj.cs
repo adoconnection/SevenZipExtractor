@@ -21,5 +21,17 @@ namespace SevenZipExtractor.Tests
 
             this.TestExtractToStream(Resources.TestFiles.ansimate_arj, testEntries, SevenZipFormat.Arj);
         }
+
+        [TestMethod]
+        public void TestProgressWithArchiveExtraction_OK()
+        {
+            this.TestExtractArchiveWithProgress(Resources.TestFiles.ansimate_arj, SevenZipFormat.Arj);
+        }
+        
+        [TestMethod]
+        public void TestProgressWithEntryExtraction_OK()
+        {
+            this.TestExtractEntriesWithProgress(Resources.TestFiles.ansimate_arj, SevenZipFormat.Arj);
+        }
     }
 }

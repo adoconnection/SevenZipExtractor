@@ -21,5 +21,17 @@ namespace SevenZipExtractor.Tests
         {
             this.TestExtractToStream(Resources.TestFiles.lzh, this.TestEntriesWithoutFolder, SevenZipFormat.Lzh);
         }
+        
+        [TestMethod]
+        public void TestProgressWithArchiveExtraction_OK()
+        {
+            this.TestExtractArchiveWithProgress(Resources.TestFiles.lzh, SevenZipFormat.Lzh);
+        }
+        
+        [TestMethod]
+        public void TestProgressWithEntryExtraction_OK()
+        {
+            this.TestExtractEntriesWithProgress(Resources.TestFiles.lzh, SevenZipFormat.Lzh);
+        }
     }
 }
