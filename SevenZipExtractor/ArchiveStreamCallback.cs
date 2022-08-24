@@ -11,6 +11,7 @@ namespace SevenZipExtractor
         
         private ulong currentCompleteValue;
         private ulong currentTotal;
+        private bool finalProgressReported = false;
 
         public ArchiveStreamCallback(uint fileNumber, Stream stream, EventHandler<EntryExtractionProgressEventArgs> progressEventHandler)
         {
@@ -22,13 +23,13 @@ namespace SevenZipExtractor
         public void SetTotal(ulong total)
         {
             this.currentTotal = total;
-            InvokeProgressCallback();
+            this.InvokeProgressCallback();
         }
 
         public void SetCompleted(ref ulong completeValue)
         {
             this.currentCompleteValue = completeValue;
-            InvokeProgressCallback();
+            this.InvokeProgressCallback();
         }
 
         public int GetStream(uint index, out ISequentialOutStream outStream, AskMode askExtractMode)
@@ -51,6 +52,15 @@ namespace SevenZipExtractor
         public void SetOperationResult(OperationResult resultEOperationResult)
         {
         }
+
+        public void InvokeFinalProgressCallback()
+        {
+            if (!this.finalProgressReported)
+            {
+                // 7z doesn't invoke SetCompleted for all formats when an entry is fully extracted, so we fake it.
+                this.SetCompleted(ref this.currentTotal);
+            }
+        }
         
         private void InvokeProgressCallback()
         {
@@ -58,6 +68,11 @@ namespace SevenZipExtractor
                 this,
                 new EntryExtractionProgressEventArgs(this.currentCompleteValue, this.currentTotal)
             );
+
+            if (this.currentCompleteValue == this.currentTotal)
+            {
+                this.finalProgressReported = true;
+            }
         }
     }
 }

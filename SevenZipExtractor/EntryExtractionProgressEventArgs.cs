@@ -5,19 +5,19 @@ namespace SevenZipExtractor
     public class EntryExtractionProgressEventArgs : EventArgs
     {
         /// <summary>
-        /// Number of bytes completed for file currently being extracted.
+        /// Number of bytes completed. Can be packed or unpacked size depending on format.
         /// </summary>
-        public ulong CurrentFileCompleted { get; }
+        public ulong Completed { get; }
 
         /// <summary>
-        /// The total number of bytes to extract for the current file.
+        /// The total number of bytes to extract. Not set for some formats.
         /// </summary>
-        public ulong CurrentFileTotal { get; }
+        public ulong Total { get; }
 
-        internal EntryExtractionProgressEventArgs(ulong currentFileCompleted, ulong currentFileTotal)
+        internal EntryExtractionProgressEventArgs(ulong completed, ulong total)
         {
-            CurrentFileCompleted = currentFileCompleted;
-            CurrentFileTotal = currentFileTotal;
+            Completed = completed;
+            Total = total;
         }
     }
 }

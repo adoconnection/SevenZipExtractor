@@ -9,19 +9,19 @@ namespace SevenZipExtractor
     public class ArchiveExtractionProgressEventArgs : EntryExtractionProgressEventArgs
     {
         /// <summary>
-        /// The index of the file currently being extracted.
+        /// The index of the entry currently being extracted.
         /// </summary>
-        public uint CurrentFileNumber {get; }
+        public uint EntryIndex {get; }
 
         /// <summary>
-        /// The total number of files that will be extracted.
+        /// The total number of entries that will be extracted.
         /// </summary>
-        public int TotalFileCount {get; }
+        public int EntryCount {get; }
 
-        internal ArchiveExtractionProgressEventArgs(uint currentFileNumber, int totalFileCount, ulong currentFileCompleted, ulong currentFileTotal) : base(currentFileCompleted, currentFileTotal)
+        internal ArchiveExtractionProgressEventArgs(uint entryIndex, int entryCount, ulong completed, ulong total) : base(completed, total)
         {
-            CurrentFileNumber = currentFileNumber;
-            TotalFileCount = totalFileCount;
+            EntryIndex = entryIndex;
+            EntryCount = entryCount;
         }
     }
 }

@@ -78,13 +78,13 @@ namespace SevenZipExtractor.Tests
 
                         entry.Extract(entryMemoryStream, (s, e) =>
                         {
-                            if (e.CurrentFileTotal > 0)
+                            if (e.Total > 0)
                             {
-                                if (e.CurrentFileCompleted == 0)
+                                if (e.Completed == 0)
                                 {
                                     progressCalledAtBeginning = true;
                                 }
-                                else if (e.CurrentFileCompleted == e.CurrentFileTotal)
+                                else if (e.Completed == e.Total)
                                 {
                                     progressCalledAtEnd = true;
                                 }
@@ -112,28 +112,33 @@ namespace SevenZipExtractor.Tests
                     int progressCalledAtBeginning = 0;
                     int progressCalledAtEnd = 0;
                     HashSet<uint> progressCalledForIndex = new HashSet<uint>();
+                    HashSet<int> reportedTotalEntryCounts = new HashSet<int>();
 
                     archiveFile.Extract(tempPath, true, (s, e) =>
                     {
-                        Assert.AreEqual(archiveFile.Entries.Count, e.TotalFileCount, "Incorrect total file count in progress callback.");
-                        progressCalledForIndex.Add(e.CurrentFileNumber);
+                        reportedTotalEntryCounts.Add(e.EntryCount);
+                        progressCalledForIndex.Add(e.EntryIndex);
 
-                        if (e.CurrentFileTotal > 0)
+                        if (e.Total > 0)
                         {
-                            if (e.CurrentFileCompleted == 0)
+                            if (e.Completed == 0)
                             {
                                 progressCalledAtBeginning++;
                             }
-                            else if (e.CurrentFileCompleted == e.CurrentFileTotal)
+                            else if (e.Completed == e.Total)
                             {
                                 progressCalledAtEnd++;
                             }
                         }
                     });
 
-                    Assert.AreEqual(archiveFile.Entries.Count, progressCalledForIndex.Count, "Progress callback was not called at all for one or more files.");
-                    Assert.IsTrue(archiveFile.Entries.Count <= progressCalledAtBeginning, "Progress callback was not called at the beginning of extracting each file.");
-                    Assert.IsTrue(progressCalledAtEnd > 0, "Progress callback was not called at the end of extracting files.");
+                    Assert.AreEqual(1, reportedTotalEntryCounts.Count, "None or more than one total file count reported in progress callback.");
+                    
+                    var entryCount = reportedTotalEntryCounts.First();
+                    Assert.IsTrue(entryCount > 0, "No entries to extract in test archive, or progress callback never called, or progress callback called with zero total entry count.");
+                    Assert.AreEqual(entryCount, progressCalledForIndex.Count, "Progress callback was not called at all for one or more entries or was called more than expected.");
+                    Assert.IsTrue(progressCalledAtBeginning > 0, "Progress callback was not called at the beginning of extraction.");
+                    Assert.IsTrue(progressCalledAtEnd > 0, "Progress callback was not called at the end of extraction.");
                 }
             }
             finally

@@ -128,7 +128,9 @@ namespace SevenZipExtractor
                     fileStreams.Add(File.Create(outputPath));
                 }
 
-                this.archive.Extract(null, 0xFFFFFFFF, 0, new ArchiveStreamsCallback(fileStreams, progressEventHandler));
+                ArchiveStreamsCallback extractCallback = new ArchiveStreamsCallback(fileStreams, progressEventHandler);
+                this.archive.Extract(null, 0xFFFFFFFF, 0, extractCallback);
+                extractCallback.InvokeFinalProgressCallback();
             }
             finally
             {

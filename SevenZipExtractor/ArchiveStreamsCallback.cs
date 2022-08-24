@@ -14,6 +14,8 @@ namespace SevenZipExtractor
         private uint currentIndex;
         private ulong currentTotal;
         private ulong currentCompleteValue;
+        private bool isCurrentValidForProgress;
+        private bool finalProgressReported = false;
 
         public ArchiveStreamsCallback(IList<Stream> streams, EventHandler<ArchiveExtractionProgressEventArgs> progressEventHandler)
         {
@@ -32,18 +34,16 @@ namespace SevenZipExtractor
             this.currentCompleteValue = completeValue;
 
             // If completeValue is 0, currentIndex has not yet been set correctly, since GetStream is initially called after SetCompleted.
-            if (completeValue > 0)
+            if (completeValue > 0 && this.isCurrentValidForProgress)
             {
-                InvokeProgressCallback();
+                this.InvokeProgressCallback();
             }
         }
 
         public int GetStream(uint index, out ISequentialOutStream outStream, AskMode askExtractMode)
         {
             this.currentIndex = index;
-
-            // SetTotal and SetCompleted are called before GetStream, so now that currentIndex is correct, we invoke the progress callback.
-            InvokeProgressCallback();
+            this.isCurrentValidForProgress = false;
 
             if (askExtractMode != AskMode.kExtract)
             {
@@ -65,6 +65,10 @@ namespace SevenZipExtractor
                 return 0;
             }
 
+            // SetTotal and SetCompleted are called before GetStream, so now that currentIndex is correct, we invoke the progress callback.
+            this.isCurrentValidForProgress = true;
+            this.InvokeProgressCallback();
+
             outStream = new OutStreamWrapper(stream);
 
             return 0;
@@ -77,6 +81,15 @@ namespace SevenZipExtractor
         public void SetOperationResult(OperationResult resultEOperationResult)
         {
         }
+        
+        public void InvokeFinalProgressCallback()
+        {
+            if (!this.finalProgressReported)
+            {
+                // 7z doesn't invoke SetCompleted for all formats when an entry is fully extracted, so we fake it.
+                this.SetCompleted(ref this.currentTotal);
+            }
+        }
 
         private void InvokeProgressCallback()
         {
@@ -84,6 +97,11 @@ namespace SevenZipExtractor
                 this,
                 new ArchiveExtractionProgressEventArgs(this.currentIndex, this.streamCount, this.currentCompleteValue, this.currentTotal)
             );
+
+            if (this.currentCompleteValue == this.currentTotal)
+            {
+                this.finalProgressReported = true;
+            }
         }
     }
 }

@@ -114,7 +114,9 @@ namespace SevenZipExtractor
 
         public void Extract(Stream stream, EventHandler<EntryExtractionProgressEventArgs> progressEventHandler = null)
         {
-            this.archive.Extract(new[] { this.index }, 1, 0, new ArchiveStreamCallback(this.index, stream, progressEventHandler));
+            ArchiveStreamCallback extractCallback = new ArchiveStreamCallback(this.index, stream, progressEventHandler);
+            this.archive.Extract(new[] { this.index }, 1, 0, extractCallback);
+            extractCallback.InvokeFinalProgressCallback();
         }
     }
 }
