@@ -56,7 +56,95 @@ namespace SevenZipExtractor.Tests
                     }
                 }
             }
+        }
 
+        protected void TestExtractEntriesWithProgress(byte[] archiveBytes, SevenZipFormat? sevenZipFormat = null)
+        {
+            MemoryStream memoryStream = new MemoryStream(archiveBytes);
+
+            using (ArchiveFile archiveFile = new ArchiveFile(memoryStream, sevenZipFormat))
+            {
+                foreach (var entry in archiveFile.Entries)
+                {
+                    if (entry.IsFolder)
+                    {
+                        continue;
+                    }
+
+                    using (MemoryStream entryMemoryStream = new MemoryStream())
+                    {
+                        bool progressCalledAtBeginning = false;
+                        bool progressCalledAtEnd = false;
+
+                        entry.Extract(entryMemoryStream, (s, e) =>
+                        {
+                            if (e.Total > 0)
+                            {
+                                if (e.Completed == 0)
+                                {
+                                    progressCalledAtBeginning = true;
+                                }
+                                else if (e.Completed == e.Total)
+                                {
+                                    progressCalledAtEnd = true;
+                                }
+                            }
+                        });
+
+                        Assert.IsTrue(progressCalledAtBeginning, $"Progress callback was not called at the beginning of extracting file {entry.FileName}.");
+                        Assert.IsTrue(progressCalledAtEnd, $"Progress callback was not called at the end of extracting file {entry.FileName}.");
+                    }
+                }
+            }
+        }
+
+        protected void TestExtractArchiveWithProgress(byte[] archiveBytes, SevenZipFormat? sevenZipFormat = null)
+        {
+            MemoryStream memoryStream = new MemoryStream(archiveBytes);
+
+            string tempPath = Path.Combine(Path.GetTempPath(), "SevenZipExtractorUnitTests");
+            Directory.CreateDirectory(tempPath);
+
+            try
+            {
+                using (ArchiveFile archiveFile = new ArchiveFile(memoryStream, sevenZipFormat))
+                {
+                    int progressCalledAtBeginning = 0;
+                    int progressCalledAtEnd = 0;
+                    HashSet<uint> progressCalledForIndex = new HashSet<uint>();
+                    HashSet<int> reportedTotalEntryCounts = new HashSet<int>();
+
+                    archiveFile.Extract(tempPath, true, (s, e) =>
+                    {
+                        reportedTotalEntryCounts.Add(e.EntryCount);
+                        progressCalledForIndex.Add(e.EntryIndex);
+
+                        if (e.Total > 0)
+                        {
+                            if (e.Completed == 0)
+                            {
+                                progressCalledAtBeginning++;
+                            }
+                            else if (e.Completed == e.Total)
+                            {
+                                progressCalledAtEnd++;
+                            }
+                        }
+                    });
+
+                    Assert.AreEqual(1, reportedTotalEntryCounts.Count, "None or more than one total file count reported in progress callback.");
+                    
+                    var entryCount = reportedTotalEntryCounts.First();
+                    Assert.IsTrue(entryCount > 0, "No entries to extract in test archive, or progress callback never called, or progress callback called with zero total entry count.");
+                    Assert.AreEqual(entryCount, progressCalledForIndex.Count, "Progress callback was not called at all for one or more entries or was called more than expected.");
+                    Assert.IsTrue(progressCalledAtBeginning > 0, "Progress callback was not called at the beginning of extraction.");
+                    Assert.IsTrue(progressCalledAtEnd > 0, "Progress callback was not called at the end of extraction.");
+                }
+            }
+            finally
+            {
+                Directory.Delete(tempPath, true);
+            }
         }
     }
 }

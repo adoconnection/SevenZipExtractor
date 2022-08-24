@@ -75,7 +75,7 @@ namespace SevenZipExtractor
             this.archiveStream = new InStreamWrapper(archiveStream);
         }
 
-        public void Extract(string outputFolder, bool overwrite = false)
+        public void Extract(string outputFolder, bool overwrite = false, EventHandler<ArchiveExtractionProgressEventArgs> progressEventHandler = null)
         {
             this.Extract(entry =>
             {
@@ -92,10 +92,10 @@ namespace SevenZipExtractor
                 }
 
                 return null;
-            });
+            }, progressEventHandler);
         }
 
-        public void Extract(Func<Entry, string> getOutputPath)
+        public void Extract(Func<Entry, string> getOutputPath, EventHandler<ArchiveExtractionProgressEventArgs> progressEventHandler = null)
         {
             IList<Stream> fileStreams = new List<Stream>();
 
@@ -128,7 +128,9 @@ namespace SevenZipExtractor
                     fileStreams.Add(File.Create(outputPath));
                 }
 
-                this.archive.Extract(null, 0xFFFFFFFF, 0, new ArchiveStreamsCallback(fileStreams));
+                ArchiveStreamsCallback extractCallback = new ArchiveStreamsCallback(fileStreams, progressEventHandler);
+                this.archive.Extract(null, 0xFFFFFFFF, 0, extractCallback);
+                extractCallback.InvokeFinalProgressCallback();
             }
             finally
             {

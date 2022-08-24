@@ -86,7 +86,7 @@ namespace SevenZipExtractor
         /// </summary>
         public bool IsSplitAfter { get; set; }
 
-        public void Extract(string fileName, bool preserveTimestamp = true)
+        public void Extract(string fileName, bool preserveTimestamp = true, EventHandler<EntryExtractionProgressEventArgs> progressEventHandler = null)
         {
             if (this.IsFolder)
             {
@@ -103,7 +103,7 @@ namespace SevenZipExtractor
 
             using (FileStream fileStream = File.Create(fileName))
             {
-                this.Extract(fileStream);
+                this.Extract(fileStream, progressEventHandler);
             }
 
             if (preserveTimestamp)
@@ -111,9 +111,12 @@ namespace SevenZipExtractor
                 File.SetLastWriteTime(fileName, this.LastWriteTime);
             }
         }
-        public void Extract(Stream stream)
+
+        public void Extract(Stream stream, EventHandler<EntryExtractionProgressEventArgs> progressEventHandler = null)
         {
-            this.archive.Extract(new[] { this.index }, 1, 0, new ArchiveStreamCallback(this.index, stream));
+            ArchiveStreamCallback extractCallback = new ArchiveStreamCallback(this.index, stream, progressEventHandler);
+            this.archive.Extract(new[] { this.index }, 1, 0, extractCallback);
+            extractCallback.InvokeFinalProgressCallback();
         }
     }
 }
