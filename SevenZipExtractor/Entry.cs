@@ -17,7 +17,7 @@ namespace SevenZipExtractor
         /// <summary>
         /// Name of the file with its relative path within the archive
         /// </summary>
-        public string FileName { get; internal set; }
+        public string? FileName { get; internal set; }
         /// <summary>
         /// True if entry is a folder, false if it is a file
         /// </summary>
@@ -64,17 +64,17 @@ namespace SevenZipExtractor
         /// <summary>
         /// Comment of the entry
         /// </summary>
-        public string Comment { get; internal set; }
+        public string? Comment { get; internal set; }
 
         /// <summary>
         /// Compression method of the entry
         /// </summary>
-        public string Method { get; internal set; }
+        public string? Method { get; internal set; }
 
         /// <summary>
         /// Host operating system of the entry
         /// </summary>
-        public string HostOS { get; internal set; }
+        public string? HostOS { get; internal set; }
 
         /// <summary>
         /// True if there are parts of this file in previous split archive parts
@@ -94,7 +94,7 @@ namespace SevenZipExtractor
                 return;
             }
 
-            string directoryName = Path.GetDirectoryName(fileName);
+            string? directoryName = Path.GetDirectoryName(fileName);
 
             if (!string.IsNullOrWhiteSpace(directoryName))
             {

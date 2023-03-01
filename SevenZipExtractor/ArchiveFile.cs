@@ -6,16 +6,20 @@ using System.Runtime.InteropServices;
 
 namespace SevenZipExtractor
 {
-    public class ArchiveFile : IDisposable
+    public class ArchiveFile : IDisposable, IArchiveOpenVolumeCallback, IArchiveOpenCallback
     {
         private SevenZipHandle sevenZipHandle;
         private readonly IInArchive archive;
         private readonly InStreamWrapper archiveStream;
-        private IList<Entry> entries;
+        private IList<Entry>? entries;
 
-        private string libraryFilePath;
+        private string? libraryFilePath;
+        /// <summary>
+        /// The current archive name, can change for multi volume archives
+        /// </summary>
+        public string? CurrentArchiveName { get; set; }
 
-        public ArchiveFile(string archiveFilePath, string libraryFilePath = null)
+        public ArchiveFile(string archiveFilePath, string? libraryFilePath = null)
         {
             this.libraryFilePath = libraryFilePath;
 
@@ -25,6 +29,7 @@ namespace SevenZipExtractor
             {
                 throw new SevenZipException("Archive file not found");
             }
+            CurrentArchiveName = Path.GetFileName(archiveFilePath);
 
             SevenZipFormat format;
             string extension = Path.GetExtension(archiveFilePath);
@@ -42,11 +47,16 @@ namespace SevenZipExtractor
                 throw new SevenZipException(Path.GetFileName(archiveFilePath) + " is not a known archive type");
             }
 
-            this.archive = this.sevenZipHandle.CreateInArchive(Formats.FormatGuidMapping[format]);
+            var newArchiver = this.sevenZipHandle!.CreateInArchive(Formats.FormatGuidMapping[format]);
+            if (newArchiver == null) {
+                throw new SevenZipException("Could not create archiv instance");
+            }
+            this.archive = newArchiver;
+
             this.archiveStream = new InStreamWrapper(File.OpenRead(archiveFilePath));
         }
 
-        public ArchiveFile(Stream archiveStream, SevenZipFormat? format = null, string libraryFilePath = null)
+        public ArchiveFile(Stream archiveStream, SevenZipFormat? format = null, string? libraryFilePath = null, string? fileName = null)
         {
             this.libraryFilePath = libraryFilePath;
 
@@ -56,6 +66,7 @@ namespace SevenZipExtractor
             {
                 throw new SevenZipException("archiveStream is null");
             }
+            CurrentArchiveName = fileName;
 
             if (format == null)
             {
@@ -71,7 +82,17 @@ namespace SevenZipExtractor
                 }
             }
 
-            this.archive = this.sevenZipHandle.CreateInArchive(Formats.FormatGuidMapping[format.Value]);
+            if (format == null)
+            {
+                throw new SevenZipException("Unable to guess format automatically");
+            }
+
+            var newArchiver = this.sevenZipHandle!.CreateInArchive(Formats.FormatGuidMapping[(SevenZipFormat) format]);
+            if (newArchiver == null)
+            {
+                throw new SevenZipException("Could not create archiv instance");
+            }
+            this.archive = newArchiver;
             this.archiveStream = new InStreamWrapper(archiveStream);
         }
 
@@ -95,15 +116,15 @@ namespace SevenZipExtractor
             });
         }
 
-        public void Extract(Func<Entry, string> getOutputPath)
+        public void Extract(Func<Entry, string?> getOutputPath)
         {
-            IList<Stream> fileStreams = new List<Stream>();
+            IList<Stream?> fileStreams = new List<Stream?>();
 
             try
             {
                 foreach (Entry entry in Entries)
                 {
-                    string outputPath = getOutputPath(entry);
+                    string? outputPath = getOutputPath(entry);
 
                     if (outputPath == null) // getOutputPath = null means SKIP
                     {
@@ -118,7 +139,7 @@ namespace SevenZipExtractor
                         continue;
                     }
 
-                    string directoryName = Path.GetDirectoryName(outputPath);
+                    string? directoryName = Path.GetDirectoryName(outputPath);
 
                     if (!string.IsNullOrWhiteSpace(directoryName))
                     {
@@ -132,7 +153,7 @@ namespace SevenZipExtractor
             }
             finally
             {
-                foreach (Stream stream in fileStreams)
+                foreach (Stream? stream in fileStreams)
                 {
                     if (stream != null)
                     {
@@ -152,7 +173,7 @@ namespace SevenZipExtractor
                 }
 
                 ulong checkPos = 32 * 1024;
-                int open = this.archive.Open(this.archiveStream, ref checkPos, null);
+                int open = this.archive.Open(this.archiveStream, ref checkPos, CurrentArchiveName != null ? this : null);
 
                 if (open != 0)
                 {
@@ -165,7 +186,7 @@ namespace SevenZipExtractor
 
                 for (uint fileIndex = 0; fileIndex < itemsCount; fileIndex++)
                 {
-                    string fileName = this.GetProperty<string>(fileIndex, ItemPropId.kpidPath);
+                    string? fileName = this.GetProperty<string>(fileIndex, ItemPropId.kpidPath);
                     bool isFolder = this.GetProperty<bool>(fileIndex, ItemPropId.kpidIsFolder);
                     bool isEncrypted = this.GetProperty<bool>(fileIndex, ItemPropId.kpidEncrypted);
                     ulong size = this.GetProperty<ulong>(fileIndex, ItemPropId.kpidSize);
@@ -175,9 +196,9 @@ namespace SevenZipExtractor
                     DateTime lastAccessTime = this.GetPropertySafe<DateTime>(fileIndex, ItemPropId.kpidLastAccessTime);
                     uint crc = this.GetPropertySafe<uint>(fileIndex, ItemPropId.kpidCRC);
                     uint attributes = this.GetPropertySafe<uint>(fileIndex, ItemPropId.kpidAttributes);
-                    string comment = this.GetPropertySafe<string>(fileIndex, ItemPropId.kpidComment);
-                    string hostOS = this.GetPropertySafe<string>(fileIndex, ItemPropId.kpidHostOS);
-                    string method = this.GetPropertySafe<string>(fileIndex, ItemPropId.kpidMethod);
+                    string? comment = this.GetPropertySafe<string>(fileIndex, ItemPropId.kpidComment);
+                    string? hostOS = this.GetPropertySafe<string>(fileIndex, ItemPropId.kpidHostOS);
+                    string? method = this.GetPropertySafe<string>(fileIndex, ItemPropId.kpidMethod);
 
                     bool isSplitBefore = this.GetPropertySafe<bool>(fileIndex, ItemPropId.kpidSplitBefore);
                     bool isSplitAfter = this.GetPropertySafe<bool>(fileIndex, ItemPropId.kpidSplitAfter);
@@ -206,7 +227,7 @@ namespace SevenZipExtractor
             }
         }
 
-        private T GetPropertySafe<T>(uint fileIndex, ItemPropId name)
+        private T? GetPropertySafe<T>(uint fileIndex, ItemPropId name)
         {
             try
             {
@@ -214,34 +235,34 @@ namespace SevenZipExtractor
             }
             catch (InvalidCastException)
             {
-                return default(T);
+                return default;
             }
         }
 
-        private T GetProperty<T>(uint fileIndex, ItemPropId name)
+        private T? GetProperty<T>(uint fileIndex, ItemPropId name)
         {
             PropVariant propVariant = new PropVariant();
             this.archive.GetProperty(fileIndex, name, ref propVariant);
-            object value = propVariant.GetObject();
+            object? value = propVariant.GetObject();
 
             if (propVariant.VarType == VarEnum.VT_EMPTY)
             {
                 propVariant.Clear();
-                return default(T);
+                return default;
             }
 
             propVariant.Clear();
 
             if (value == null)
             {
-                return default(T);
+                return default;
             }
 
             Type type = typeof(T);
             bool isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
-            Type underlyingType = isNullable ? Nullable.GetUnderlyingType(type) : type;
+            Type? underlyingType = isNullable ? Nullable.GetUnderlyingType(type) : type;
 
-            T result = (T)Convert.ChangeType(value.ToString(), underlyingType);
+            T? result = (T?)Convert.ChangeType(value.ToString(), underlyingType);
 
             return result;
         }
@@ -361,6 +382,24 @@ namespace SevenZipExtractor
 
             format = SevenZipFormat.Undefined;
             return false;
+        }
+        public void GetProperty(ItemPropId propID, ref PropVariant value) {
+            if (propID == ItemPropId.kpidName && CurrentArchiveName != null) {
+                value.Clear();
+                value.VarType = VarEnum.VT_BSTR;
+                value.pointerValue = Marshal.StringToBSTR(CurrentArchiveName);
+            }
+        }
+        public int GetStream(string name, out IInStream? inStream) {
+            // not supported
+            inStream = null;
+            return -2147467259; // E_FAIL
+        }
+
+        public void SetTotal(IntPtr files, IntPtr bytes) {
+        }
+
+        public void SetCompleted(IntPtr files, IntPtr bytes) {
         }
 
         ~ArchiveFile()

@@ -15,7 +15,7 @@ namespace SevenZipExtractor.Tests
         public const UInt32 DefaultPolynomial = 0xedb88320u;
         public const UInt32 DefaultSeed = 0xffffffffu;
 
-        static UInt32[] defaultTable;
+        static UInt32[]? defaultTable;
 
         readonly UInt32 seed;
         readonly UInt32[] table;

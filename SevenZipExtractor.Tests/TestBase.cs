@@ -23,15 +23,20 @@ namespace SevenZipExtractor.Tests
                 new TestFileEntry { Name = "testFolder\\image3.jpg", IsFolder = false, MD5 = "24ffd227340432596fe61ef6300098ad"},
         };
 
-        protected void TestExtractToStream(byte[] archiveBytes, IList<TestFileEntry> expected, SevenZipFormat? sevenZipFormat = null)
+        protected IList<TestFileEntry> TestSingleFile = new List<TestFileEntry>()
+{
+                new TestFileEntry { Name = "image1.jpg", IsFolder = false, MD5 = "b3144b66569ab0052b4019a2b4c07a31"},
+        };
+
+        protected void TestExtractToStream(byte[] archiveBytes, IList<TestFileEntry> expected, SevenZipFormat? sevenZipFormat = null, string? fileName = null)
         {
             MemoryStream memoryStream = new MemoryStream(archiveBytes);
 
-            using (ArchiveFile archiveFile = new ArchiveFile(memoryStream, sevenZipFormat))
+            using (ArchiveFile archiveFile = new ArchiveFile(memoryStream, sevenZipFormat, null, fileName))
             {
                 foreach (TestFileEntry testEntry in expected)
                 {
-                    Entry entry = archiveFile.Entries.FirstOrDefault(e => e.FileName == testEntry.Name && e.IsFolder == testEntry.IsFolder);
+                    Entry? entry = archiveFile.Entries.FirstOrDefault(e => e.FileName == testEntry.Name && e.IsFolder == testEntry.IsFolder);
 
                     Assert.IsNotNull(entry, "Entry not found: " + testEntry.Name);
 
@@ -42,7 +47,7 @@ namespace SevenZipExtractor.Tests
 
                     using (MemoryStream entryMemoryStream = new MemoryStream())
                     {
-                        entry.Extract(entryMemoryStream);
+                        entry!.Extract(entryMemoryStream);
 
                         if (testEntry.MD5 != null)
                         {

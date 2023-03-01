@@ -6,7 +6,7 @@ namespace SevenZipExtractor
 {
     internal class SevenZipHandle : IDisposable
     {
-        private SafeLibraryHandle sevenZipSafeHandle;
+        private SafeLibraryHandle? sevenZipSafeHandle;
 
         public SevenZipHandle(string sevenZipLibPath)
         {
@@ -48,7 +48,7 @@ namespace SevenZipExtractor
             GC.SuppressFinalize(this);
         }
 
-        public IInArchive CreateInArchive(Guid classId)
+        public IInArchive? CreateInArchive(Guid classId)
         {
             if (this.sevenZipSafeHandle == null)
             {

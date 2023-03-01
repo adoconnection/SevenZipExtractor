@@ -13,7 +13,7 @@ namespace SevenZipExtractor
         [PreserveSig]
         int GetStream(
             uint index,
-            [MarshalAs(UnmanagedType.Interface)] out ISequentialOutStream outStream,
+            [MarshalAs(UnmanagedType.Interface)] out ISequentialOutStream? outStream,
             AskMode askExtractMode);
         // GetStream OUT: S_OK - OK, S_FALSE - skeep this file
 
