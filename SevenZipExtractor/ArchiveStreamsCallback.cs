@@ -5,9 +5,9 @@ namespace SevenZipExtractor
 {
     internal class ArchiveStreamsCallback : IArchiveExtractCallback
     {
-        private readonly IList<Stream> streams;
+        private readonly IList<Stream?> streams;
 
-        public ArchiveStreamsCallback(IList<Stream> streams) 
+        public ArchiveStreamsCallback(IList<Stream?> streams) 
         {
             this.streams = streams;
         }
@@ -20,7 +20,7 @@ namespace SevenZipExtractor
         {
         }
 
-        public int GetStream(uint index, out ISequentialOutStream outStream, AskMode askExtractMode)
+        public int GetStream(uint index, out ISequentialOutStream? outStream, AskMode askExtractMode)
         {
             if (askExtractMode != AskMode.kExtract)
             {
@@ -34,7 +34,7 @@ namespace SevenZipExtractor
                 return 0;
             }
 
-            Stream stream = this.streams[(int) index];
+            Stream? stream = this.streams[(int) index];
 
             if (stream == null)
             {

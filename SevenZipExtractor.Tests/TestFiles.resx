@@ -121,8 +121,14 @@
   <data name="ansimate_arj" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\ansimate-arj.arj;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="cab" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\cab.cab;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="lzh" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\lzh.lzh;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="mslz" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\mslz.dl_;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="rar" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\rar.rar;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

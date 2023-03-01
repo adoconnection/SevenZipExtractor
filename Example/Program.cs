@@ -22,7 +22,7 @@ namespace ConsoleApplication86
                     Console.WriteLine(entry.FileName);
 
                     // extract to file
-                    entry.Extract(entry.FileName);
+                    entry.Extract(entry.FileName ?? "NoFileName");
 
                     // extract to stream
                     MemoryStream memoryStream = new MemoryStream();

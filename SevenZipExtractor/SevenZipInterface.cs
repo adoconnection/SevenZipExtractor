@@ -10,14 +10,14 @@ using System.Threading;
 namespace SevenZipExtractor
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct PropArray
+    public struct PropArray
     {
         uint length;
         IntPtr pointerValues;
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    internal struct PropVariant
+    public struct PropVariant
     {
         [DllImport("ole32.dll")]
         private static extern int PropVariantClear(ref PropVariant pvar);
@@ -34,6 +34,9 @@ namespace SevenZipExtractor
             get
             {
                 return (VarEnum) this.vt;
+            }
+            set {
+                this.vt = (ushort) value;
             }
         }
 
@@ -73,7 +76,7 @@ namespace SevenZipExtractor
             }
         }
 
-        public object GetObject()
+        public object? GetObject()
         {
             switch (this.VarType)
             {
@@ -115,12 +118,12 @@ namespace SevenZipExtractor
         // ref ulong replaced with IntPtr because handlers ofter pass null value
         // read actual value with Marshal.ReadInt64
         void SetTotal(
-            IntPtr files, // [In] ref ulong files, can use 'ulong* files' but it is unsafe
-            IntPtr bytes); // [In] ref ulong bytes
+            [In] IntPtr files, // [In] ref ulong files, can use 'ulong* files' but it is unsafe
+            [In] IntPtr bytes); // [In] ref ulong bytes
 
         void SetCompleted(
-            IntPtr files, // [In] ref ulong files
-            IntPtr bytes); // [In] ref ulong bytes
+            [In] IntPtr files, // [In] ref ulong files
+            [In] IntPtr bytes); // [In] ref ulong bytes
     }
 
     [ComImport]
@@ -158,12 +161,12 @@ namespace SevenZipExtractor
     {
         void GetProperty(
             ItemPropId propID, // PROPID
-            IntPtr value); // PROPVARIANT
+            [In] ref PropVariant value); // PROPVARIANT
 
         [PreserveSig]
         int GetStream(
             [MarshalAs(UnmanagedType.LPWStr)] string name,
-            [MarshalAs(UnmanagedType.Interface)] out IInStream inStream);
+            [MarshalAs(UnmanagedType.Interface)] out IInStream? inStream);
     }
 
     [ComImport]
@@ -220,7 +223,7 @@ namespace SevenZipExtractor
     [ComImport]
     [Guid("23170F69-40C1-278A-0000-000300030000")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    internal interface IInStream //: ISequentialInStream
+    public interface IInStream //: ISequentialInStream
     {
         //[PreserveSig]
         //int Read(
@@ -260,7 +263,7 @@ namespace SevenZipExtractor
         int SetSize(long newSize);
     }
 
-    internal enum ItemPropId : uint
+    public enum ItemPropId : uint
     {
         kpidNoProperty = 0,
 
@@ -316,7 +319,7 @@ namespace SevenZipExtractor
         int Open(
             IInStream stream,
             /*[MarshalAs(UnmanagedType.U8)]*/ [In] ref ulong maxCheckStartPosition,
-            [MarshalAs(UnmanagedType.Interface)] IArchiveOpenCallback openArchiveCallback);
+            [MarshalAs(UnmanagedType.Interface)] IArchiveOpenCallback? openArchiveCallback);
 
         void Close();
         //void GetNumberOfItems([In] ref uint numItem);
@@ -329,7 +332,7 @@ namespace SevenZipExtractor
 
         [PreserveSig]
         int Extract(
-            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] uint[] indices, //[In] ref uint indices,
+            [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] uint[]? indices, //[In] ref uint indices,
             uint numItems,
             int testMode,
             [MarshalAs(UnmanagedType.Interface)] IArchiveExtractCallback extractCallback);

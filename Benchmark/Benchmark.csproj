@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp3.1;net47</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AssemblyTitle>Benchmark</AssemblyTitle>
     <Product>Benchmark</Product>
     <Copyright>Copyright © 2020</Copyright>
     <OutputPath>bin\$(Configuration)\</OutputPath>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\SevenZipExtractor\SevenZipExtractor.csproj" />
