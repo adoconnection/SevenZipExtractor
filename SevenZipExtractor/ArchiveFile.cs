@@ -245,7 +245,14 @@ namespace SevenZipExtractor
             bool isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
             Type underlyingType = isNullable ? Nullable.GetUnderlyingType(type) : type;
 
-            T result = (T)Convert.ChangeType(value.ToString(), underlyingType);
+            // This is a hacky code just to work on Lex's machine
+			if (underlyingType == typeof(DateTime))
+			{
+				var dateTimeValue = (DateTime)value;
+				return (T)(object)dateTimeValue;
+			}
+
+			T result = (T)Convert.ChangeType(value.ToString(), underlyingType);
 
             return result;
         }
