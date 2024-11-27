@@ -23,7 +23,7 @@ namespace SevenZipExtractor.Tests
                 new TestFileEntry { Name = "testFolder\\image3.jpg", IsFolder = false, MD5 = "24ffd227340432596fe61ef6300098ad"},
         };
 
-        protected void TestExtractToStream(byte[] archiveBytes, IList<TestFileEntry> expected, SevenZipFormat? sevenZipFormat = null)
+        protected void TestExtractToStream(byte[] archiveBytes, IList<TestFileEntry> expected, SevenZipFormat? sevenZipFormat = null, string password = null)
         {
             MemoryStream memoryStream = new MemoryStream(archiveBytes);
 
@@ -42,7 +42,7 @@ namespace SevenZipExtractor.Tests
 
                     using (MemoryStream entryMemoryStream = new MemoryStream())
                     {
-                        entry.Extract(entryMemoryStream);
+                        entry.Extract(entryMemoryStream, password);
 
                         if (testEntry.MD5 != null)
                         {

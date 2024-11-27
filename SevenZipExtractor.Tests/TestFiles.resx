@@ -133,4 +133,7 @@
   <data name="zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\zip.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="zip_hello" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\zip-hello.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

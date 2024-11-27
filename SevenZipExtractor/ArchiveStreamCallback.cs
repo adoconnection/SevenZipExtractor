@@ -2,15 +2,18 @@
 
 namespace SevenZipExtractor
 {
-    internal class ArchiveStreamCallback : IArchiveExtractCallback
+    internal class ArchiveStreamCallback : IArchiveExtractCallback, ICryptoGetTextPassword
     {
         private readonly uint fileNumber;
         private readonly Stream stream;
 
-        public ArchiveStreamCallback(uint fileNumber, Stream stream)
+        public string Password { get; }
+
+        public ArchiveStreamCallback(uint fileNumber, Stream stream, string password = null)
         {
             this.fileNumber = fileNumber;
             this.stream = stream;
+            Password = password ?? "";
         }
 
         public void SetTotal(ulong total)
@@ -19,6 +22,12 @@ namespace SevenZipExtractor
 
         public void SetCompleted(ref ulong completeValue)
         {
+        }
+
+        public int CryptoGetTextPassword(out string password)
+        {
+            password = this.Password;
+            return 0;
         }
 
         public int GetStream(uint index, out ISequentialOutStream outStream, AskMode askExtractMode)

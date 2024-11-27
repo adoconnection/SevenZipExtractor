@@ -111,9 +111,9 @@ namespace SevenZipExtractor
                 File.SetLastWriteTime(fileName, this.LastWriteTime);
             }
         }
-        public void Extract(Stream stream)
+        public void Extract(Stream stream, string password = null)
         {
-            this.archive.Extract(new[] { this.index }, 1, 0, new ArchiveStreamCallback(this.index, stream));
+            this.archive.Extract(new[] { this.index }, 1, 0, new ArchiveStreamCallback(this.index, stream, password));
         }
     }
 }

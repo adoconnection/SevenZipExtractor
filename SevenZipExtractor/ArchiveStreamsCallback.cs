@@ -3,13 +3,21 @@ using System.IO;
 
 namespace SevenZipExtractor
 {
-    internal class ArchiveStreamsCallback : IArchiveExtractCallback
+    internal class ArchiveStreamsCallback : IArchiveExtractCallback, ICryptoGetTextPassword
     {
         private readonly IList<Stream> streams;
 
-        public ArchiveStreamsCallback(IList<Stream> streams) 
+        public string Password { get; }
+
+        public ArchiveStreamsCallback(IList<Stream> streams, string password = null)
         {
             this.streams = streams;
+            Password = password;
+        }
+        public int CryptoGetTextPassword(out string password)
+        {
+            password = Password;
+            return 0;
         }
 
         public void SetTotal(ulong total)

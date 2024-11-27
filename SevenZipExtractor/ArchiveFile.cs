@@ -95,13 +95,13 @@ namespace SevenZipExtractor
             });
         }
 
-        public void Extract(Func<Entry, string> getOutputPath)
+        public void Extract(Func<Entry, string> getOutputPath, string password = null)
         {
             IList<Stream> fileStreams = new List<Stream>();
 
             try
             {
-                foreach (Entry entry in Entries)
+                foreach (Entry entry in this.Entries)
                 {
                     string outputPath = getOutputPath(entry);
 
@@ -128,7 +128,7 @@ namespace SevenZipExtractor
                     fileStreams.Add(File.Create(outputPath));
                 }
 
-                this.archive.Extract(null, 0xFFFFFFFF, 0, new ArchiveStreamsCallback(fileStreams));
+                this.archive.Extract(null, 0xFFFFFFFF, 0, new ArchiveStreamsCallback(fileStreams, password));
             }
             finally
             {

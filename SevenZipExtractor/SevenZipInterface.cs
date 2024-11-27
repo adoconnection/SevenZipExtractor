@@ -136,6 +136,23 @@ namespace SevenZipExtractor
         //string CryptoGetTextPassword();
     }
 
+    [ComImport]
+    [Guid("23170F69-40C1-278A-0000-000500110000")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    internal interface ICryptoGetTextPassword2
+    {
+        /// <summary>
+        /// Sets password for the archive
+        /// </summary>
+        /// <param name="passwordIsDefined">Specifies whether archive has a password or not (0 if not)</param>
+        /// <param name="password">Password for the archive</param>
+        /// <returns>Zero if everything is OK</returns>
+        [PreserveSig]
+        int CryptoGetTextPassword2(
+            ref int passwordIsDefined,
+            [MarshalAs(UnmanagedType.BStr)] out string password);
+    }
+
     internal enum AskMode : int
     {
         kExtract = 0,
