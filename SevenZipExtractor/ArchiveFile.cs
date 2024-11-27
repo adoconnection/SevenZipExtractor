@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -41,6 +41,7 @@ namespace SevenZipExtractor
             {
                 throw new SevenZipException(Path.GetFileName(archiveFilePath) + " is not a known archive type");
             }
+            Format = format;
 
             this.archive = this.sevenZipHandle.CreateInArchive(Formats.FormatGuidMapping[format]);
             this.archiveStream = new InStreamWrapper(File.OpenRead(archiveFilePath));
@@ -70,10 +71,13 @@ namespace SevenZipExtractor
                     throw new SevenZipException("Unable to guess format automatically");
                 }
             }
+            Format = format.Value;
 
             this.archive = this.sevenZipHandle.CreateInArchive(Formats.FormatGuidMapping[format.Value]);
             this.archiveStream = new InStreamWrapper(archiveStream);
         }
+
+        public SevenZipFormat Format { get; private set; }
 
         public void Extract(string outputFolder, bool overwrite = false)
         {
