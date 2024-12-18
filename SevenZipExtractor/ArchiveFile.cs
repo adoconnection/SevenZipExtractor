@@ -15,6 +15,8 @@ namespace SevenZipExtractor
 
         private string libraryFilePath;
 
+        public SevenZipFormat Format { get; private set; }
+
         public ArchiveFile(string archiveFilePath, string libraryFilePath = null)
         {
             this.libraryFilePath = libraryFilePath;
@@ -27,6 +29,7 @@ namespace SevenZipExtractor
             }
 
             SevenZipFormat format;
+
             string extension = Path.GetExtension(archiveFilePath);
 
             if (this.GuessFormatFromExtension(extension, out format))
@@ -41,7 +44,8 @@ namespace SevenZipExtractor
             {
                 throw new SevenZipException(Path.GetFileName(archiveFilePath) + " is not a known archive type");
             }
-            Format = format;
+
+            this.Format = format;
 
             this.archive = this.sevenZipHandle.CreateInArchive(Formats.FormatGuidMapping[format]);
             this.archiveStream = new InStreamWrapper(File.OpenRead(archiveFilePath));
@@ -71,15 +75,15 @@ namespace SevenZipExtractor
                     throw new SevenZipException("Unable to guess format automatically");
                 }
             }
-            Format = format.Value;
+
+            this.Format = format.Value;
 
             this.archive = this.sevenZipHandle.CreateInArchive(Formats.FormatGuidMapping[format.Value]);
             this.archiveStream = new InStreamWrapper(archiveStream);
         }
 
-        public SevenZipFormat Format { get; private set; }
 
-        public void Extract(string outputFolder, bool overwrite = false)
+        public void Extract(string outputFolder, bool overwrite = false, string password = null)
         {
             this.Extract(entry =>
             {
@@ -96,7 +100,8 @@ namespace SevenZipExtractor
                 }
 
                 return null;
-            });
+            },
+            password);
         }
 
         public void Extract(Func<Entry, string> getOutputPath, string password = null)
