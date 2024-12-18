@@ -71,7 +71,14 @@ using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
 {
     archiveFile.Extract("Output"); // extract all
 }
+```
 
+#### Extract password proceted archive, owerwrite files
+```cs
+using (ArchiveFile archiveFile = new ArchiveFile(@"Archive.ARJ"))
+{
+    archiveFile.Extract("Output", overwrite: true, password: "mySecret");
+}
 ```
 
 #### Extract to file or stream
@@ -130,6 +137,14 @@ using (ArchiveFile archiveFile = new ArchiveFile(response.GetResponseStream())
 
 
 ## Changelog
+1.0.19 / 2024.12.18
+- Password property for archive.Extract method
+  
+1.0.18 / 2024.12.18
+- [Extract password protected archives](https://github.com/adoconnection/SevenZipExtractor/issues/77) (Thanks [SalmaBegumJSR](https://github.com/SalmaBegumJSR))
+- #75 updating dlls to 24.08 version (Thanks [insane-abreu](https://github.com/insane-abreu))
+- #69 Add exposed field that contains the archive format (Thanks [Gargaj](https://github.com/Gargaj))
+
 1.0.17 / 2022.04.08
 - #54 4Gb+ archives fixed! 🎉 (Thanks [Pyroluk](https://github.com/Pyroluk))
 
